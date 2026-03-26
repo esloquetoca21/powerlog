@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/user_model.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   UserModel? _currentUser;
   bool _isLoading = false;
@@ -20,6 +22,8 @@ class AuthService extends ChangeNotifier {
   AuthService() {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
+
+  // ── Auth state ────────────────────────────────────────────────────────────
 
   Future<void> _onAuthStateChanged(User? firebaseUser) async {
     if (firebaseUser == null) {
@@ -40,6 +44,8 @@ class AuthService extends ChangeNotifier {
       debugPrint('Error loading user data: $e');
     }
   }
+
+  // ── Email / password ──────────────────────────────────────────────────────
 
   Future<bool> signUp({
     required String email,
@@ -66,7 +72,7 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
       return true;
     } on FirebaseAuthException catch (e) {
-      _setError(_mapFirebaseError(e.code));
+      _setError(_mapAuthError(e.code));
       return false;
     } finally {
       _setLoading(false);
@@ -83,32 +89,95 @@ class AuthService extends ChangeNotifier {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
-      _setError(_mapFirebaseError(e.code));
+      _setError(_mapAuthError(e.code));
       return false;
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
-    _currentUser = null;
-    notifyListeners();
+  // ── Google ────────────────────────────────────────────────────────────────
+  //
+  // Requisitos previos (configuración única por plataforma):
+  //   Android → SHA-1 en Firebase Console + google-services.json actualizado
+  //   iOS     → URL scheme en Info.plist + GoogleService-Info.plist
+
+  Future<bool> signInWithGoogle() async {
+    _clearError();
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return false; // usuario canceló el flujo
+
+      _setLoading(true);
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final result = await _auth.signInWithCredential(credential);
+      final uid = result.user!.uid;
+
+      // Crear documento solo si es la primera vez
+      final doc = await _db.collection('users').doc(uid).get();
+      if (!doc.exists) {
+        final user = UserModel(
+          uid: uid,
+          email: result.user!.email ?? '',
+          displayName: result.user!.displayName ?? 'Atleta',
+          createdAt: DateTime.now(),
+        );
+        await _db.collection('users').doc(uid).set(user.toMap());
+        _currentUser = user;
+        notifyListeners();
+      }
+      // Si el doc ya existe, _onAuthStateChanged → _loadUserData lo gestiona
+
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _setError(_mapAuthError(e.code));
+      return false;
+    } catch (e) {
+      _setError('Error al conectar con Google. Inténtalo de nuevo.');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
   }
+
+  // ── Recuperación de contraseña ────────────────────────────────────────────
 
   Future<bool> resetPassword(String email) async {
     _setLoading(true);
     _clearError();
     try {
-      await _auth.sendPasswordResetEmail(email: email);
+      await _auth.sendPasswordResetEmail(email: email.trim());
       return true;
     } on FirebaseAuthException catch (e) {
-      _setError(_mapFirebaseError(e.code));
+      _setError(_mapAuthError(e.code));
       return false;
     } finally {
       _setLoading(false);
     }
   }
+
+  // ── Sign out ──────────────────────────────────────────────────────────────
+
+  Future<void> signOut() async {
+    await Future.wait([
+      _auth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
+    _currentUser = null;
+    notifyListeners();
+  }
+
+  // ── Helpers públicos ──────────────────────────────────────────────────────
+
+  void clearError() => _clearError();
+
+  // ── Helpers privados ──────────────────────────────────────────────────────
 
   void _setLoading(bool value) {
     _isLoading = value;
@@ -121,13 +190,16 @@ class AuthService extends ChangeNotifier {
   }
 
   void _clearError() {
+    if (_errorMessage == null) return;
     _errorMessage = null;
+    notifyListeners();
   }
 
-  String _mapFirebaseError(String code) {
+  String _mapAuthError(String code) {
     switch (code) {
       case 'user-not-found':
-        return 'No existe una cuenta con ese email.';
+      case 'invalid-credential':
+        return 'Email o contraseña incorrectos.';
       case 'wrong-password':
         return 'Contraseña incorrecta.';
       case 'email-already-in-use':
@@ -137,9 +209,15 @@ class AuthService extends ChangeNotifier {
       case 'invalid-email':
         return 'El formato del email no es válido.';
       case 'too-many-requests':
-        return 'Demasiados intentos. Intenta más tarde.';
+        return 'Demasiados intentos. Espera unos minutos.';
+      case 'network-request-failed':
+        return 'Sin conexión. Revisa tu red e inténtalo de nuevo.';
+      case 'account-exists-with-different-credential':
+        return 'Ya existe una cuenta con ese email usando otro método.';
+      case 'user-disabled':
+        return 'Esta cuenta ha sido desactivada.';
       default:
-        return 'Error de autenticación. Inténtalo de nuevo.';
+        return 'Algo salió mal. Inténtalo de nuevo.';
     }
   }
 }

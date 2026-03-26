@@ -12,7 +12,7 @@ Referencia completa: `docs/PRD.md`
 |------|-----------|---------|
 | App móvil | Flutter + Dart | SDK ≥ 3.0.0 |
 | Base de datos | Firebase Firestore | cloud_firestore ^5.2.1 |
-| Autenticación | Firebase Auth | firebase_auth ^5.1.4 |
+| Autenticación | Firebase Auth + Google Sign-In | firebase_auth ^5.1.4, google_sign_in ^6.2.1 |
 | IA generativa | Anthropic API | claude-sonnet-4-6 |
 | Estado | Provider | ^6.1.2 |
 | HTTP | http (para Anthropic) | ^1.2.2 |
@@ -127,8 +127,8 @@ docs/
 | Pantalla | Archivo | Estado |
 |----------|---------|--------|
 | Splash | `screens/splash_screen.dart` | ✅ Hecha |
-| Login | `screens/auth/login_screen.dart` | ✅ Hecha |
-| Registro | `screens/auth/register_screen.dart` | ✅ Hecha |
+| Login | `screens/auth/login_screen.dart` | ✅ Hecha (email+pass, Google, olvidé contraseña) |
+| Registro | `screens/auth/register_screen.dart` | ✅ Hecha (email+pass, confirmar, Google) |
 | Perfil inicial (onboarding) | `screens/auth/onboarding_screen.dart` | ⬜ Pendiente |
 | Selección de rol | `screens/auth/role_selection_screen.dart` | ⬜ Pendiente |
 
