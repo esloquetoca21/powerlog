@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/workout_model.dart';
+import '../models/session_model.dart';
 
-class WorkoutCard extends StatelessWidget {
-  final WorkoutModel workout;
+class SessionCard extends StatelessWidget {
+  final SessionModel session;
 
-  const WorkoutCard({super.key, required this.workout});
+  const SessionCard({super.key, required this.session});
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = DateFormat('EEE, d MMM', 'es').format(workout.date);
-    final duration = workout.duration != null
-        ? '${workout.duration!.inMinutes} min'
+    final dateStr = DateFormat('EEE, d MMM', 'es').format(session.date);
+    final duration = session.duration != null
+        ? '${session.duration!.inMinutes} min'
         : null;
 
     return Container(
@@ -29,7 +29,7 @@ class WorkoutCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  workout.title,
+                  session.title,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -46,29 +46,29 @@ class WorkoutCard extends StatelessWidget {
           Text(dateStr,
               style: TextStyle(
                   color: Colors.white.withOpacity(0.4), fontSize: 13)),
-          if (workout.exercises.isNotEmpty) ...[
+          if (session.exercises.isNotEmpty) ...[
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 6,
-              children: workout.exercises
+              children: session.exercises
                   .map((e) => _ExerciseChip(name: e.name))
                   .toList(),
             ),
           ],
-          if (workout.totalVolume > 0) ...[
+          if (session.totalVolume > 0) ...[
             const SizedBox(height: 12),
             Row(
               children: [
-                _StatChip(
-                    icon: Icons.bar_chart,
-                    label: '${workout.totalVolume} kg vol.'),
-                const SizedBox(width: 8),
-                if (workout.totalEstimated1RM > 0)
-                  _StatChip(
-                    icon: Icons.emoji_events_outlined,
-                    label:
-                        'Total: ${workout.totalEstimated1RM.toStringAsFixed(0)} kg',
+                _StatItem(
+                  icon: Icons.bar_chart,
+                  label: '${session.totalVolume} kg vol.',
+                ),
+                const SizedBox(width: 16),
+                if (session.averageRpe != null)
+                  _StatItem(
+                    icon: Icons.speed,
+                    label: 'RPE ${session.averageRpe!.toStringAsFixed(1)}',
                   ),
               ],
             ),
@@ -97,10 +97,10 @@ class _ExerciseChip extends StatelessWidget {
   }
 }
 
-class _StatChip extends StatelessWidget {
+class _StatItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  const _StatChip({required this.icon, required this.label});
+  const _StatItem({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +110,8 @@ class _StatChip extends StatelessWidget {
         Icon(icon, color: Colors.white38, size: 14),
         const SizedBox(width: 4),
         Text(label,
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
+            style: TextStyle(
+                color: Colors.white.withOpacity(0.4), fontSize: 12)),
       ],
     );
   }

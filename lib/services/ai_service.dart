@@ -2,29 +2,49 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/workout_model.dart';
+import '../models/session_model.dart';
 
+// Anthropic API — modelo según PRD sección 7: Claude Sonnet 4.6
 class AiService {
   static const String _baseUrl = 'https://api.anthropic.com/v1/messages';
-  // TODO: Mover a variables de entorno seguras antes de producción
+  // TODO: mover a variable de entorno antes de producción
   static const String _apiKey = 'YOUR_ANTHROPIC_API_KEY';
-  static const String _model = 'claude-haiku-4-5-20251001';
+  static const String _model = 'claude-sonnet-4-6';
 
-  Future<String?> analyzeWorkout(WorkoutModel workout) async {
-    final prompt = _buildWorkoutPrompt(workout);
+  /// Análisis post-sesión: tonelaje, RPE medio, comparativa e intensidad.
+  Future<String?> analyzeSession({
+    required SessionModel session,
+    SessionModel? previousSession,
+  }) async {
+    final prompt = _buildSessionPrompt(session, previousSession);
     return _sendMessage(prompt);
   }
 
-  Future<String?> getTrainingAdvice({
-    required List<WorkoutModel> recentWorkouts,
+  /// Consejo personalizado del coach IA.
+  Future<String?> getCoachAdvice({
+    required List<SessionModel> recentSessions,
     required String question,
   }) async {
-    final context = _buildContextFromWorkouts(recentWorkouts);
-    final prompt = '''$context
+    final context = _buildContext(recentSessions);
+    final prompt = '$context\n\nPregunta del atleta: $question\n\n'
+        'Responde en español, de forma concisa y práctica (máximo 150 palabras).';
+    return _sendMessage(prompt);
+  }
 
-Pregunta del atleta: $question
+  /// Genera un plan de entrenamiento según el método elegido.
+  Future<String?> generatePlan({
+    required String method, // Sheiko, 5/3/1, Texas Method, GZCLP
+    required int weeksToCompetition,
+    required double squat1RM,
+    required double bench1RM,
+    required double deadlift1RM,
+  }) async {
+    final prompt = '''Genera un plan de entrenamiento de powerlifting con el método $method.
+Semanas hasta la competición: $weeksToCompetition
+1RM actuales: Sentadilla $squat1RM kg, Banca $bench1RM kg, Peso muerto $deadlift1RM kg
 
-Responde en español, de forma concisa y práctica (máximo 150 palabras).''';
+Devuelve el plan en formato estructurado por semanas y días, en español, con series, reps y % de carga.
+Incluye bloque de acumulación, intensificación, peaking y descarga.''';
     return _sendMessage(prompt);
   }
 
@@ -40,8 +60,9 @@ Responde en español, de forma concisa y práctica (máximo 150 palabras).''';
         body: jsonEncode({
           'model': _model,
           'max_tokens': 512,
-          'system':
-              'Eres un coach experto en powerlifting. Analiza los datos de entrenamiento y da consejos prácticos, concisos y motivadores en español.',
+          'system': 'Eres un coach experto en powerlifting. '
+              'Analiza los datos de entrenamiento y da consejos prácticos, '
+              'concisos y motivadores en español.',
           'messages': [
             {'role': 'user', 'content': userMessage},
           ],
@@ -52,45 +73,56 @@ Responde en español, de forma concisa y práctica (máximo 150 palabras).''';
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         final content = data['content'] as List<dynamic>;
         return content.first['text'] as String?;
-      } else {
-        debugPrint('Anthropic API error: ${response.statusCode} ${response.body}');
-        return null;
       }
+      debugPrint('Anthropic error: ${response.statusCode} ${response.body}');
+      return null;
     } catch (e) {
       debugPrint('Error calling Anthropic API: $e');
       return null;
     }
   }
 
-  String _buildWorkoutPrompt(WorkoutModel workout) {
-    final buffer = StringBuffer();
-    buffer.writeln('Analiza este entrenamiento de powerlifting:');
-    buffer.writeln('Fecha: ${workout.date}');
-    buffer.writeln('Duración: ${workout.duration?.inMinutes ?? "?"} minutos');
-    buffer.writeln('Ejercicios:');
-
-    for (final exercise in workout.exercises) {
-      buffer.writeln('\n${exercise.name}:');
-      for (final set in exercise.sets) {
-        final rpe = set.rpe != null ? ' @ RPE ${set.rpe}' : '';
-        buffer.writeln('  - Serie ${set.setNumber}: ${set.weight}kg x ${set.reps}$rpe');
-      }
-      buffer.writeln('  1RM estimado: ${exercise.bestEstimated1RM.toStringAsFixed(1)}kg');
+  String _buildSessionPrompt(SessionModel session, SessionModel? prev) {
+    final buf = StringBuffer();
+    buf.writeln('Analiza esta sesión de powerlifting:');
+    buf.writeln('Título: ${session.title}');
+    buf.writeln('Duración: ${session.duration?.inMinutes ?? "?"} minutos');
+    buf.writeln('Tonelaje total: ${session.totalVolume} kg');
+    if (session.averageRpe != null) {
+      buf.writeln('RPE medio: ${session.averageRpe!.toStringAsFixed(1)}');
     }
 
-    buffer.writeln('\nVolumen total: ${workout.totalVolume}kg');
-    if (workout.notes != null) buffer.writeln('Notas: ${workout.notes}');
-    buffer.writeln('\nDa un análisis breve del entrenamiento con puntos clave y recomendaciones.');
-    return buffer.toString();
+    for (final ex in session.exercises) {
+      buf.writeln('\n${ex.name} (${ex.category.name}):');
+      for (final s in ex.sets) {
+        final rpe = s.rpe != null ? ' @ RPE ${s.rpe}' : '';
+        buf.writeln('  Serie ${s.setNumber}: ${s.weight}kg × ${s.reps}$rpe');
+      }
+      buf.writeln('  1RM estimado: ${ex.bestEstimated1RM.toStringAsFixed(1)} kg');
+    }
+
+    if (prev != null) {
+      final diff = session.totalVolume - prev.totalVolume;
+      final pct = prev.totalVolume > 0
+          ? (diff / prev.totalVolume * 100).toStringAsFixed(1)
+          : '0';
+      buf.writeln('\nComparación con sesión anterior (${prev.title}):');
+      buf.writeln('  Cambio en tonelaje: ${diff > 0 ? '+' : ''}$diff kg ($pct%)');
+    }
+
+    buf.writeln('\nDa un análisis breve (máximo 120 palabras) con puntos clave '
+        'y recomendaciones para la próxima sesión.');
+    return buf.toString();
   }
 
-  String _buildContextFromWorkouts(List<WorkoutModel> workouts) {
-    final recent = workouts.take(5).toList();
-    final buffer = StringBuffer();
-    buffer.writeln('Historial reciente de entrenamiento (últimas ${recent.length} sesiones):');
-    for (final w in recent) {
-      buffer.writeln('- ${w.date.toLocal()}: ${w.title}, volumen: ${w.totalVolume}kg');
+  String _buildContext(List<SessionModel> sessions) {
+    final recent = sessions.take(5).toList();
+    final buf = StringBuffer();
+    buf.writeln('Historial reciente (últimas ${recent.length} sesiones):');
+    for (final s in recent) {
+      buf.writeln('- ${s.date.toLocal()}: ${s.title}, tonelaje: ${s.totalVolume} kg'
+          '${s.averageRpe != null ? ', RPE medio: ${s.averageRpe!.toStringAsFixed(1)}' : ''}');
     }
-    return buffer.toString();
+    return buf.toString();
   }
 }

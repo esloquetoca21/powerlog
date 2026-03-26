@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
-import '../../services/workout_service.dart';
-import '../../models/workout_model.dart';
-import 'active_workout_screen.dart';
+import '../../services/session_service.dart';
+import 'active_session_screen.dart';
 
-class NewWorkoutScreen extends StatefulWidget {
-  const NewWorkoutScreen({super.key});
+class NewSessionScreen extends StatefulWidget {
+  const NewSessionScreen({super.key});
 
   @override
-  State<NewWorkoutScreen> createState() => _NewWorkoutScreenState();
+  State<NewSessionScreen> createState() => _NewSessionScreenState();
 }
 
-class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
+class _NewSessionScreenState extends State<NewSessionScreen> {
   final _titleController = TextEditingController();
 
   static const List<String> _quickTemplates = [
-    'Sentadilla / Press / Peso Muerto',
+    'Sentadilla / Banca / Peso Muerto',
     'Día de Sentadilla',
     'Día de Banca',
     'Día de Peso Muerto',
@@ -34,26 +33,26 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
   void _start(String title) {
     if (title.trim().isEmpty) return;
     final auth = context.read<AuthService>();
-    context.read<WorkoutService>().startWorkout(
+    context.read<SessionService>().startSession(
           userId: auth.currentUser!.uid,
           title: title.trim(),
         );
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const ActiveWorkoutScreen()),
+      MaterialPageRoute(builder: (_) => const ActiveSessionScreen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuevo entrenamiento')),
+      appBar: AppBar(title: const Text('Nueva sesión')),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Nombre del entrenamiento',
+              'Nombre de la sesión',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -74,8 +73,8 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
                   borderSide: BorderSide.none,
                 ),
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.arrow_forward,
-                      color: Color(0xFFE53935)),
+                  icon:
+                      const Icon(Icons.arrow_forward, color: Color(0xFFE53935)),
                   onPressed: () => _start(_titleController.text),
                 ),
               ),
@@ -105,8 +104,8 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
                       decoration: BoxDecoration(
                         color: const Color(0xFF1A1A1A),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                            color: Colors.white.withOpacity(0.07)),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.07)),
                       ),
                       child: Row(
                         children: [
@@ -114,11 +113,9 @@ class _NewWorkoutScreenState extends State<NewWorkoutScreen> {
                               color: Color(0xFFE53935), size: 20),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              template,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 15),
-                            ),
+                            child: Text(template,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 15)),
                           ),
                           Icon(Icons.chevron_right,
                               color: Colors.white.withOpacity(0.3)),

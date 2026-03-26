@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/exercise_model.dart';
-import '../services/workout_service.dart';
+import '../models/set_model.dart';
+import '../services/session_service.dart';
 
 class AddExerciseSheet extends StatefulWidget {
   const AddExerciseSheet({super.key});
@@ -72,9 +73,9 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
       id: _uuid.v4(),
       name: name,
       category: _selectedCategory,
-      sets: [SetModel(setNumber: 1, weight: 0, reps: 5)],
+      sets: [SetModel(id: _uuid.v4(), setNumber: 1, weight: 0, reps: 5, timestamp: DateTime.now())],
     );
-    context.read<WorkoutService>().addExercise(exercise);
+    context.read<SessionService>().addExercise(exercise);
     Navigator.of(context).pop();
   }
 

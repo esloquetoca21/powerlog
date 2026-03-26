@@ -1,43 +1,46 @@
-import 'package:equatable/equatable.dart';
+// Colección Firestore: 'sessions'
 import 'exercise_model.dart';
 
-enum WorkoutStatus { inProgress, completed }
+enum SessionStatus { inProgress, completed }
 
-class WorkoutModel extends Equatable {
+class SessionModel {
   final String id;
   final String userId;
   final String title;
   final DateTime date;
   final List<ExerciseModel> exercises;
-  final WorkoutStatus status;
+  final SessionStatus status;
   final Duration? duration;
   final String? notes;
-  final String? aiInsights;
+  final String? aiInsights; // análisis post-sesión generado por IA
+  final DateTime timestamp;
 
-  const WorkoutModel({
+  const SessionModel({
     required this.id,
     required this.userId,
     required this.title,
     required this.date,
     required this.exercises,
-    this.status = WorkoutStatus.inProgress,
+    this.status = SessionStatus.inProgress,
     this.duration,
     this.notes,
     this.aiInsights,
+    required this.timestamp,
   });
 
-  WorkoutModel copyWith({
+  SessionModel copyWith({
     String? id,
     String? userId,
     String? title,
     DateTime? date,
     List<ExerciseModel>? exercises,
-    WorkoutStatus? status,
+    SessionStatus? status,
     Duration? duration,
     String? notes,
     String? aiInsights,
+    DateTime? timestamp,
   }) {
-    return WorkoutModel(
+    return SessionModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       title: title ?? this.title,
@@ -47,11 +50,12 @@ class WorkoutModel extends Equatable {
       duration: duration ?? this.duration,
       notes: notes ?? this.notes,
       aiInsights: aiInsights ?? this.aiInsights,
+      timestamp: timestamp ?? this.timestamp,
     );
   }
 
-  factory WorkoutModel.fromMap(Map<String, dynamic> map) {
-    return WorkoutModel(
+  factory SessionModel.fromMap(Map<String, dynamic> map) {
+    return SessionModel(
       id: map['id'] as String,
       userId: map['userId'] as String,
       title: map['title'] as String,
@@ -59,15 +63,16 @@ class WorkoutModel extends Equatable {
       exercises: (map['exercises'] as List<dynamic>)
           .map((e) => ExerciseModel.fromMap(e as Map<String, dynamic>))
           .toList(),
-      status: WorkoutStatus.values.firstWhere(
+      status: SessionStatus.values.firstWhere(
         (s) => s.name == map['status'],
-        orElse: () => WorkoutStatus.inProgress,
+        orElse: () => SessionStatus.inProgress,
       ),
       duration: map['durationSeconds'] != null
           ? Duration(seconds: map['durationSeconds'] as int)
           : null,
       notes: map['notes'] as String?,
       aiInsights: map['aiInsights'] as String?,
+      timestamp: DateTime.parse(map['timestamp'] as String),
     );
   }
 
@@ -82,29 +87,47 @@ class WorkoutModel extends Equatable {
       'durationSeconds': duration?.inSeconds,
       'notes': notes,
       'aiInsights': aiInsights,
+      'timestamp': timestamp.toIso8601String(),
     };
   }
 
-  // Total tonelaje del entrenamiento
+  /// Tonelaje total de la sesión (kg × reps de todos los ejercicios)
   int get totalVolume =>
       exercises.fold(0, (sum, e) => sum + e.totalVolume);
 
-  // Mejor 1RM estimado de los tres levantamientos principales
-  double get totalEstimated1RM {
-    double squat = 0, bench = 0, deadlift = 0;
-    for (final exercise in exercises) {
-      if (exercise.category == ExerciseCategory.squat) {
-        squat = exercise.bestEstimated1RM > squat ? exercise.bestEstimated1RM : squat;
-      } else if (exercise.category == ExerciseCategory.bench) {
-        bench = exercise.bestEstimated1RM > bench ? exercise.bestEstimated1RM : bench;
-      } else if (exercise.category == ExerciseCategory.deadlift) {
-        deadlift = exercise.bestEstimated1RM > deadlift ? exercise.bestEstimated1RM : deadlift;
-      }
-    }
-    return squat + bench + deadlift;
+  /// RPE medio de la sesión
+  double? get averageRpe {
+    final rpes = exercises
+        .map((e) => e.averageRpe)
+        .whereType<double>()
+        .toList();
+    if (rpes.isEmpty) return null;
+    return rpes.fold(0.0, (a, b) => a + b) / rpes.length;
   }
 
-  @override
-  List<Object?> get props =>
-      [id, userId, title, date, exercises, status, duration, notes, aiInsights];
+  /// Mejor 1RM estimado por cada levantamiento principal (SBD)
+  _SBDTotal get sbdTotal {
+    double squat = 0, bench = 0, deadlift = 0;
+    for (final ex in exercises) {
+      final rm = ex.bestEstimated1RM;
+      if (ex.category == ExerciseCategory.squat && rm > squat) squat = rm;
+      if (ex.category == ExerciseCategory.bench && rm > bench) bench = rm;
+      if (ex.category == ExerciseCategory.deadlift && rm > deadlift) deadlift = rm;
+    }
+    return _SBDTotal(squat: squat, bench: bench, deadlift: deadlift);
+  }
+}
+
+class _SBDTotal {
+  final double squat;
+  final double bench;
+  final double deadlift;
+
+  const _SBDTotal({
+    required this.squat,
+    required this.bench,
+    required this.deadlift,
+  });
+
+  double get total => squat + bench + deadlift;
 }

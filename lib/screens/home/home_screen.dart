@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
-import '../../services/workout_service.dart';
-import '../../widgets/workout_card.dart';
-import '../workout/new_workout_screen.dart';
+import '../../services/session_service.dart';
+import '../../widgets/session_card.dart';
+import '../workout/new_session_screen.dart';
 import '../auth/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final auth = context.read<AuthService>();
       if (auth.currentUser != null) {
-        context.read<WorkoutService>().loadWorkouts(auth.currentUser!.uid);
+        context.read<SessionService>().loadSessions(auth.currentUser!.uid);
       }
     });
   }
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthService>();
-    final workoutService = context.watch<WorkoutService>();
+    final sessionService = context.watch<SessionService>();
 
     return Scaffold(
       body: CustomScrollView(
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${workoutService.workouts.length} entrenamientos registrados',
+                    '${sessionService.sessions.length} sesiones registradas',
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.5), fontSize: 14),
                   ),
@@ -93,12 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          if (workoutService.isLoading)
+          if (sessionService.isLoading)
             const SliverFillRemaining(
               child: Center(
-                  child: CircularProgressIndicator(color: Color(0xFFE53935))),
+                child: CircularProgressIndicator(color: Color(0xFFE53935)),
+              ),
             )
-          else if (workoutService.workouts.isEmpty)
+          else if (sessionService.sessions.isEmpty)
             SliverFillRemaining(
               child: Center(
                 child: Column(
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white.withOpacity(0.2), size: 64),
                     const SizedBox(height: 16),
                     Text(
-                      'Sin entrenamientos aún',
+                      'Sin sesiones aún',
                       style: TextStyle(
                           color: Colors.white.withOpacity(0.4), fontSize: 16),
                     ),
@@ -129,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: WorkoutCard(workout: workoutService.workouts[index]),
+                    child: SessionCard(session: sessionService.sessions[index]),
                   ),
-                  childCount: workoutService.workouts.length,
+                  childCount: sessionService.sessions.length,
                 ),
               ),
             ),
@@ -139,12 +140,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const NewWorkoutScreen()),
+          MaterialPageRoute(builder: (_) => const NewSessionScreen()),
         ),
         backgroundColor: const Color(0xFFE53935),
         icon: const Icon(Icons.add, color: Colors.white),
-        label:
-            const Text('Entrenar', style: TextStyle(color: Colors.white)),
+        label: const Text('Sesión', style: TextStyle(color: Colors.white)),
       ),
     );
   }

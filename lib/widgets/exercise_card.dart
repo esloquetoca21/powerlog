@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/exercise_model.dart';
-import '../services/workout_service.dart';
+import '../models/set_model.dart';
+import '../services/session_service.dart';
 
 class ExerciseCard extends StatelessWidget {
   final ExerciseModel exercise;
@@ -13,28 +14,26 @@ class ExerciseCard extends StatelessWidget {
 
   void _addSet(BuildContext context) {
     final lastSet = exercise.sets.isEmpty
-        ? SetModel(setNumber: 1, weight: 0, reps: 5)
+        ? SetModel(id: _uuid.v4(), setNumber: 1, weight: 0, reps: 5, timestamp: DateTime.now())
         : exercise.sets.last;
 
     final newSet = SetModel(
+      id: _uuid.v4(),
       setNumber: exercise.sets.length + 1,
       weight: lastSet.weight,
       reps: lastSet.reps,
+      timestamp: DateTime.now(),
     );
     final updated = exercise.copyWith(sets: [...exercise.sets, newSet]);
-    context.read<WorkoutService>().updateExercise(updated);
+    context.read<SessionService>().updateExercise(updated);
   }
 
   void _updateSet(BuildContext context, SetModel set,
       {double? weight, int? reps}) {
-    final updatedSet = set.copyWith(
-      weight: weight,
-      reps: reps,
-      completed: weight != null || reps != null ? set.completed : null,
-    );
+    final updatedSet = set.copyWith(weight: weight, reps: reps);
     final sets =
         exercise.sets.map((s) => s.setNumber == set.setNumber ? updatedSet : s).toList();
-    context.read<WorkoutService>().updateExercise(exercise.copyWith(sets: sets));
+    context.read<SessionService>().updateExercise(exercise.copyWith(sets: sets));
   }
 
   void _toggleSetCompleted(BuildContext context, SetModel set) {
@@ -42,7 +41,7 @@ class ExerciseCard extends StatelessWidget {
     final sets = exercise.sets
         .map((s) => s.setNumber == set.setNumber ? updatedSet : s)
         .toList();
-    context.read<WorkoutService>().updateExercise(exercise.copyWith(sets: sets));
+    context.read<SessionService>().updateExercise(exercise.copyWith(sets: sets));
   }
 
   @override
@@ -82,7 +81,7 @@ class ExerciseCard extends StatelessWidget {
                   icon: Icon(Icons.delete_outline,
                       color: Colors.white.withOpacity(0.3), size: 20),
                   onPressed: () => context
-                      .read<WorkoutService>()
+                      .read<SessionService>()
                       .removeExercise(exercise.id),
                 ),
               ],

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'services/auth_service.dart';
-import 'services/workout_service.dart';
+import 'services/session_service.dart';
 import 'screens/splash_screen.dart';
 
 void main() async {
@@ -23,7 +23,7 @@ class PowerLogApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_) => WorkoutService()),
+        ChangeNotifierProvider(create: (_) => SessionService()),
       ],
       child: MaterialApp(
         title: 'PowerLog',

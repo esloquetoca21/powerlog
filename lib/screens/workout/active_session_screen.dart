@@ -2,20 +2,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/workout_service.dart';
+import '../../services/session_service.dart';
 import '../../services/ai_service.dart';
 import '../../models/exercise_model.dart';
 import '../../widgets/exercise_card.dart';
 import '../../widgets/add_exercise_sheet.dart';
 
-class ActiveWorkoutScreen extends StatefulWidget {
-  const ActiveWorkoutScreen({super.key});
+class ActiveSessionScreen extends StatefulWidget {
+  const ActiveSessionScreen({super.key});
 
   @override
-  State<ActiveWorkoutScreen> createState() => _ActiveWorkoutScreenState();
+  State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
 }
 
-class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
+class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   final _aiService = AiService();
   late final Stopwatch _stopwatch;
   late final Timer _timer;
@@ -27,7 +27,8 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     _stopwatch = Stopwatch()..start();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final m = _stopwatch.elapsed.inMinutes.toString().padLeft(2, '0');
-      final s = (_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0');
+      final s =
+          (_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0');
       setState(() => _elapsed = '$m:$s');
     });
   }
@@ -51,12 +52,12 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     );
   }
 
-  Future<void> _finishWorkout() async {
+  Future<void> _finishSession() async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text('Finalizar entrenamiento',
+        title: const Text('Finalizar sesión',
             style: TextStyle(color: Colors.white)),
         content: const Text('¿Deseas guardar y finalizar?',
             style: TextStyle(color: Colors.white70)),
@@ -79,16 +80,16 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     _stopwatch.stop();
     _timer.cancel();
 
-    final workoutService = context.read<WorkoutService>();
+    final sessionService = context.read<SessionService>();
     String? aiInsights;
-
     try {
-      aiInsights =
-          await _aiService.analyzeWorkout(workoutService.activeWorkout!);
+      aiInsights = await _aiService.analyzeSession(
+        session: sessionService.activeSession!,
+      );
     } catch (_) {}
 
     if (!mounted) return;
-    await workoutService.finishWorkout(
+    await sessionService.finishSession(
       duration: _stopwatch.elapsed,
       aiInsights: aiInsights,
     );
@@ -101,15 +102,15 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text('Cancelar entrenamiento',
+        title: const Text('Cancelar sesión',
             style: TextStyle(color: Colors.white)),
-        content: const Text(
-            '¿Seguro? Perderás los datos de esta sesión.',
+        content: const Text('¿Seguro? Perderás los datos de esta sesión.',
             style: TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('No', style: TextStyle(color: Colors.white54)),
+            child:
+                const Text('No', style: TextStyle(color: Colors.white54)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -120,17 +121,17 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
       ),
     );
     if (confirmed == true) {
-      context.read<WorkoutService>().cancelWorkout();
+      if (mounted) context.read<SessionService>().cancelSession();
     }
     return confirmed ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final workoutService = context.watch<WorkoutService>();
-    final workout = workoutService.activeWorkout;
+    final sessionService = context.watch<SessionService>();
+    final session = sessionService.activeSession;
 
-    if (workout == null) return const SizedBox.shrink();
+    if (session == null) return const SizedBox.shrink();
 
     return PopScope(
       canPop: false,
@@ -139,7 +140,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(workout.title),
+          title: Text(session.title),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -157,13 +158,13 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                       const Icon(Icons.timer_outlined,
                           color: Color(0xFFE53935), size: 16),
                       const SizedBox(width: 4),
-                      Text(_elapsed,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontFeatures: [
-                                FontFeature.tabularFigures()
-                              ])),
+                      Text(
+                        _elapsed,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -171,7 +172,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
             ),
           ],
         ),
-        body: workout.exercises.isEmpty
+        body: session.exercises.isEmpty
             ? Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -182,17 +183,18 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                     Text(
                       'Añade tu primer ejercicio',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4), fontSize: 16),
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 16),
                     ),
                   ],
                 ),
               )
             : ListView.builder(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                itemCount: workout.exercises.length,
+                itemCount: session.exercises.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: ExerciseCard(exercise: workout.exercises[index]),
+                  child: ExerciseCard(exercise: session.exercises[index]),
                 ),
               ),
         bottomNavigationBar: SafeArea(
@@ -203,8 +205,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: _showAddExercise,
-                    icon: const Icon(Icons.add,
-                        color: Color(0xFFE53935)),
+                    icon: const Icon(Icons.add, color: Color(0xFFE53935)),
                     label: const Text('Ejercicio',
                         style: TextStyle(color: Color(0xFFE53935))),
                     style: OutlinedButton.styleFrom(
@@ -218,7 +219,8 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: workout.exercises.isEmpty ? null : _finishWorkout,
+                    onPressed:
+                        session.exercises.isEmpty ? null : _finishSession,
                     icon: const Icon(Icons.check, color: Colors.white),
                     label: const Text('Finalizar',
                         style: TextStyle(color: Colors.white)),
