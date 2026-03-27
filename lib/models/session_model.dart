@@ -13,6 +13,11 @@ class SessionModel {
   final Duration? duration;
   final String? notes;
   final String? aiInsights; // análisis post-sesión generado por IA
+  // Valoraciones de bienestar (1–10)
+  final int? ratingMood;      // sensación del entrenamiento
+  final int? ratingFatigue;   // fatiga percibida
+  final int? ratingCalories;  // ingesta calórica últimas 24 h
+  final int? ratingSleep;     // calidad del sueño
   final DateTime timestamp;
 
   const SessionModel({
@@ -25,6 +30,10 @@ class SessionModel {
     this.duration,
     this.notes,
     this.aiInsights,
+    this.ratingMood,
+    this.ratingFatigue,
+    this.ratingCalories,
+    this.ratingSleep,
     required this.timestamp,
   });
 
@@ -38,6 +47,10 @@ class SessionModel {
     Duration? duration,
     String? notes,
     String? aiInsights,
+    int? ratingMood,
+    int? ratingFatigue,
+    int? ratingCalories,
+    int? ratingSleep,
     DateTime? timestamp,
   }) {
     return SessionModel(
@@ -50,6 +63,10 @@ class SessionModel {
       duration: duration ?? this.duration,
       notes: notes ?? this.notes,
       aiInsights: aiInsights ?? this.aiInsights,
+      ratingMood: ratingMood ?? this.ratingMood,
+      ratingFatigue: ratingFatigue ?? this.ratingFatigue,
+      ratingCalories: ratingCalories ?? this.ratingCalories,
+      ratingSleep: ratingSleep ?? this.ratingSleep,
       timestamp: timestamp ?? this.timestamp,
     );
   }
@@ -72,6 +89,10 @@ class SessionModel {
           : null,
       notes: map['notes'] as String?,
       aiInsights: map['aiInsights'] as String?,
+      ratingMood: map['ratingMood'] as int?,
+      ratingFatigue: map['ratingFatigue'] as int?,
+      ratingCalories: map['ratingCalories'] as int?,
+      ratingSleep: map['ratingSleep'] as int?,
       timestamp: DateTime.parse(map['timestamp'] as String),
     );
   }
@@ -87,6 +108,10 @@ class SessionModel {
       'durationSeconds': duration?.inSeconds,
       'notes': notes,
       'aiInsights': aiInsights,
+      'ratingMood': ratingMood,
+      'ratingFatigue': ratingFatigue,
+      'ratingCalories': ratingCalories,
+      'ratingSleep': ratingSleep,
       'timestamp': timestamp.toIso8601String(),
     };
   }

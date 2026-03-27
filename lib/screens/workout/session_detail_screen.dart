@@ -25,6 +25,12 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
   bool _aiLoading = true;
   bool _saving = false;
 
+  // Valoraciones de bienestar (1–10)
+  int _ratingMood = 5;
+  int _ratingFatigue = 5;
+  int _ratingCalories = 5;
+  int _ratingSleep = 5;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +65,10 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         duration: widget.duration,
         notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
         aiInsights: _aiInsights,
+        ratingMood: _ratingMood,
+        ratingFatigue: _ratingFatigue,
+        ratingCalories: _ratingCalories,
+        ratingSleep: _ratingSleep,
       );
     } catch (e) {
       if (!mounted) return;
@@ -206,6 +216,47 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               _AiInsightsCard(
                 loading: _aiLoading,
                 insights: _aiInsights,
+              ),
+
+              const SizedBox(height: 24),
+
+              // ── Valoraciones ─────────────────────────────────────────────
+              _SectionTitle('Cómo fue el día'),
+              const SizedBox(height: 14),
+              _WellnessSlider(
+                icon: Icons.sentiment_satisfied_alt_outlined,
+                label: 'Sensación del entrenamiento',
+                leftLabel: 'Malo',
+                rightLabel: 'Bueno',
+                value: _ratingMood,
+                onChanged: (v) => setState(() => _ratingMood = v),
+              ),
+              const SizedBox(height: 12),
+              _WellnessSlider(
+                icon: Icons.battery_alert_outlined,
+                label: 'Fatiga percibida',
+                leftLabel: 'Poca',
+                rightLabel: 'Mucha',
+                value: _ratingFatigue,
+                onChanged: (v) => setState(() => _ratingFatigue = v),
+              ),
+              const SizedBox(height: 12),
+              _WellnessSlider(
+                icon: Icons.restaurant_outlined,
+                label: 'Ingesta calórica (últimas 24 h)',
+                leftLabel: 'Déficit',
+                rightLabel: 'Superávit',
+                value: _ratingCalories,
+                onChanged: (v) => setState(() => _ratingCalories = v),
+              ),
+              const SizedBox(height: 12),
+              _WellnessSlider(
+                icon: Icons.bedtime_outlined,
+                label: 'Calidad del sueño',
+                leftLabel: 'Mal descanso',
+                rightLabel: 'Descansado',
+                value: _ratingSleep,
+                onChanged: (v) => setState(() => _ratingSleep = v),
               ),
 
               const SizedBox(height: 24),
@@ -554,6 +605,108 @@ class _AiInsightsCard extends StatelessWidget {
                 height: 1.4,
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Wellness slider ───────────────────────────────────────────────────────────
+
+class _WellnessSlider extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String leftLabel;
+  final String rightLabel;
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  const _WellnessSlider({
+    required this.icon,
+    required this.label,
+    required this.leftLabel,
+    required this.rightLabel,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: const Color(0xFFE53935), size: 16),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(label,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500)),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE53935).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '$value',
+                    style: const TextStyle(
+                        color: Color(0xFFE53935),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: const Color(0xFFE53935),
+              inactiveTrackColor: Colors.white.withOpacity(0.1),
+              thumbColor: const Color(0xFFE53935),
+              overlayColor: const Color(0xFFE53935).withOpacity(0.15),
+              trackHeight: 3,
+              thumbShape:
+                  const RoundSliderThumbShape(enabledThumbRadius: 7),
+              overlayShape:
+                  const RoundSliderOverlayShape(overlayRadius: 16),
+            ),
+            child: Slider(
+              min: 1,
+              max: 10,
+              divisions: 9,
+              value: value.toDouble(),
+              onChanged: (v) => onChanged(v.round()),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(leftLabel,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.35),
+                        fontSize: 10)),
+                Text(rightLabel,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.35),
+                        fontSize: 10)),
+              ],
+            ),
+          ),
         ],
       ),
     );

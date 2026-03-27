@@ -6,6 +6,20 @@ import 'package:uuid/uuid.dart';
 import '../../models/exercise_model.dart';
 import '../../models/session_model.dart';
 import '../../models/set_model.dart';
+
+Color _setTypeColor(SetType t) => switch (t) {
+      SetType.normal => Colors.transparent,
+      SetType.failure => const Color(0xFFE53935),
+      SetType.dropSet => Colors.orangeAccent,
+      SetType.restPause => Colors.purpleAccent,
+    };
+
+String _setTypeLabel(SetType t) => switch (t) {
+      SetType.normal => '',
+      SetType.failure => 'F',
+      SetType.dropSet => 'DS',
+      SetType.restPause => 'RP',
+    };
 import '../../services/session_service.dart';
 import '../../widgets/add_exercise_sheet.dart';
 
@@ -681,13 +695,33 @@ class _SetRowState extends State<_SetRow> {
                       color: Colors.white, fontSize: 13)),
             ),
             SizedBox(
-              width: 52,
+              width: 60,
               child: Text(
-                widget.set.rpe != null ? 'RPE ${widget.set.rpe}' : '—',
+                widget.set.rir != null
+                    ? 'RIR ${widget.set.rir}'
+                    : widget.set.rpe != null
+                        ? 'RPE ${widget.set.rpe}'
+                        : '—',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), fontSize: 13),
+                    color: Colors.white.withOpacity(0.4), fontSize: 12),
               ),
             ),
+            if (widget.set.setType != SetType.normal)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: _setTypeColor(widget.set.setType).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  _setTypeLabel(widget.set.setType),
+                  style: TextStyle(
+                      color: _setTypeColor(widget.set.setType),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
           ],
         ),
       );

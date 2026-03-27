@@ -86,6 +86,10 @@ class SessionService extends ChangeNotifier {
     required Duration duration,
     String? notes,
     String? aiInsights,
+    int? ratingMood,
+    int? ratingFatigue,
+    int? ratingCalories,
+    int? ratingSleep,
   }) async {
     if (_activeSession == null) throw Exception('No hay sesión activa');
 
@@ -94,6 +98,10 @@ class SessionService extends ChangeNotifier {
       duration: duration,
       notes: notes,
       aiInsights: aiInsights,
+      ratingMood: ratingMood,
+      ratingFatigue: ratingFatigue,
+      ratingCalories: ratingCalories,
+      ratingSleep: ratingSleep,
     );
 
     await _db.collection('sessions').doc(completed.id).set(completed.toMap());
