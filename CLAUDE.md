@@ -141,8 +141,8 @@ docs/
 | Dashboard (próx. sesión, racha, semana) | `screens/home/dashboard_screen.dart` | ✅ Hecha |
 | Análisis post-sesión + IA | `screens/workout/session_detail_screen.dart` | ✅ Hecha |
 | Progreso (gráficas, récords, Wilks, DOTS) | `screens/progress/progress_screen.dart` | ✅ Hecha |
-| Mi plan / Calendario (semanal + macrociclo) | `screens/plan/calendar_screen.dart` | ⬜ Pendiente |
-| Crear / editar plan (manual, IA, entrenador) | `screens/plan/plan_builder_screen.dart` | ⬜ Pendiente |
+| Mi plan / Calendario (semanal + macrociclo) | `screens/plan/calendar_screen.dart` | ✅ Hecha |
+| Crear / editar plan (manual, IA, entrenador) | `screens/plan/plan_builder_screen.dart` | ✅ Hecha |
 | Perfil y configuración | `screens/profile/profile_screen.dart` | ✅ Hecha |
 
 ### Flujo del entrenador

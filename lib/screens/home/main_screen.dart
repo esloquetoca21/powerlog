@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
+import '../../services/plan_service.dart';
 import '../../services/session_service.dart';
 import 'dashboard_screen.dart';
 import 'home_screen.dart';
+import '../plan/calendar_screen.dart';
 import '../progress/progress_screen.dart';
 import '../profile/profile_screen.dart';
 
@@ -21,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static const _screens = [
     DashboardScreen(),
+    CalendarScreen(),
     HomeScreen(),
     ProgressScreen(),
     ProfileScreen(),
@@ -32,8 +35,10 @@ class _MainScreenState extends State<MainScreen> {
     _currentIndex = widget.initialIndex;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final auth = context.read<AuthService>();
-      if (auth.currentUser != null) {
-        context.read<SessionService>().loadSessions(auth.currentUser!.uid);
+      final uid = auth.currentUser?.uid;
+      if (uid != null) {
+        context.read<SessionService>().loadSessions(uid);
+        context.read<PlanService>().loadPlans(uid);
       }
     });
   }
@@ -52,14 +57,19 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: const Color(0xFF111111),
         selectedItemColor: const Color(0xFFE53935),
         unselectedItemColor: Colors.white.withOpacity(0.35),
-        selectedFontSize: 11,
-        unselectedFontSize: 11,
+        selectedFontSize: 10,
+        unselectedFontSize: 10,
         elevation: 0,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            activeIcon: Icon(Icons.calendar_month),
+            label: 'Plan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center_outlined),
