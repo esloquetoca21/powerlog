@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/session_service.dart';
-import '../../services/ai_service.dart';
 import '../../models/exercise_model.dart';
 import '../../widgets/exercise_card.dart';
 import '../../widgets/add_exercise_sheet.dart';
+import 'session_detail_screen.dart';
 
 class ActiveSessionScreen extends StatefulWidget {
   const ActiveSessionScreen({super.key});
@@ -16,7 +16,6 @@ class ActiveSessionScreen extends StatefulWidget {
 }
 
 class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
-  final _aiService = AiService();
   late final Stopwatch _stopwatch;
   late final Timer _timer;
   String _elapsed = '00:00';
@@ -80,21 +79,12 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     _stopwatch.stop();
     _timer.cancel();
 
-    final sessionService = context.read<SessionService>();
-    String? aiInsights;
-    try {
-      aiInsights = await _aiService.analyzeSession(
-        session: sessionService.activeSession!,
-      );
-    } catch (_) {}
-
     if (!mounted) return;
-    await sessionService.finishSession(
-      duration: _stopwatch.elapsed,
-      aiInsights: aiInsights,
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => SessionDetailScreen(duration: _stopwatch.elapsed),
+      ),
     );
-
-    if (mounted) Navigator.of(context).pop();
   }
 
   Future<bool> _onWillPop() async {
