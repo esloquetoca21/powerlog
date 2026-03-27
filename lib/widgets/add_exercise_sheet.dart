@@ -18,7 +18,7 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
   final _searchController = TextEditingController();
   ExerciseCategory _selectedCategory = ExerciseCategory.squat;
 
-  static const Map<ExerciseCategory, List<String>> _exercises = {
+  static const Map<ExerciseCategory, List<String>> exercises = {
     ExerciseCategory.squat: [
       // Sentadilla competición y variantes principales
       'Sentadilla',
@@ -232,10 +232,10 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
   List<String> get _filteredExercises {
     final query = _searchController.text.toLowerCase().trim();
     if (query.isEmpty) {
-      return _exercises[_selectedCategory] ?? [];
+      return exercises[_selectedCategory] ?? [];
     }
     // Con texto: busca en todas las categorías
-    return _exercises.values
+    return exercises.values
         .expand((list) => list)
         .where((e) => e.toLowerCase().contains(query))
         .toList();
