@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/session_card.dart';
 import '../workout/new_session_screen.dart';
+import '../workout/saved_session_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -89,8 +90,16 @@ class HomeScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: SessionCard(
-                        session: sessionService.sessions[index]),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SavedSessionScreen(
+                              session: sessionService.sessions[index]),
+                        ),
+                      ),
+                      child: SessionCard(
+                          session: sessionService.sessions[index]),
+                    ),
                   ),
                   childCount: sessionService.sessions.length,
                 ),

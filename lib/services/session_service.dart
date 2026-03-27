@@ -109,6 +109,14 @@ class SessionService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateSession(SessionModel updated) async {
+    await _db.collection('sessions').doc(updated.id).set(updated.toMap());
+    _sessions = _sessions
+        .map((s) => s.id == updated.id ? updated : s)
+        .toList();
+    notifyListeners();
+  }
+
   Future<void> deleteSession(String sessionId) async {
     await _db.collection('sessions').doc(sessionId).delete();
     _sessions = _sessions.where((s) => s.id != sessionId).toList();
