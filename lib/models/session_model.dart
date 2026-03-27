@@ -18,6 +18,7 @@ class SessionModel {
   final int? ratingFatigue;   // fatiga percibida
   final int? ratingCalories;  // ingesta calórica últimas 24 h
   final int? ratingSleep;     // calidad del sueño
+  final int? ratingStress;    // estrés últimas 24 h
   final DateTime timestamp;
 
   const SessionModel({
@@ -34,6 +35,7 @@ class SessionModel {
     this.ratingFatigue,
     this.ratingCalories,
     this.ratingSleep,
+    this.ratingStress,
     required this.timestamp,
   });
 
@@ -51,6 +53,7 @@ class SessionModel {
     int? ratingFatigue,
     int? ratingCalories,
     int? ratingSleep,
+    int? ratingStress,
     DateTime? timestamp,
   }) {
     return SessionModel(
@@ -67,6 +70,7 @@ class SessionModel {
       ratingFatigue: ratingFatigue ?? this.ratingFatigue,
       ratingCalories: ratingCalories ?? this.ratingCalories,
       ratingSleep: ratingSleep ?? this.ratingSleep,
+      ratingStress: ratingStress ?? this.ratingStress,
       timestamp: timestamp ?? this.timestamp,
     );
   }
@@ -93,6 +97,7 @@ class SessionModel {
       ratingFatigue: map['ratingFatigue'] as int?,
       ratingCalories: map['ratingCalories'] as int?,
       ratingSleep: map['ratingSleep'] as int?,
+      ratingStress: map['ratingStress'] as int?,
       timestamp: DateTime.parse(map['timestamp'] as String),
     );
   }
@@ -112,6 +117,7 @@ class SessionModel {
       'ratingFatigue': ratingFatigue,
       'ratingCalories': ratingCalories,
       'ratingSleep': ratingSleep,
+      'ratingStress': ratingStress,
       'timestamp': timestamp.toIso8601String(),
     };
   }

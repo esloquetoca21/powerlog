@@ -90,6 +90,7 @@ class SessionService extends ChangeNotifier {
     int? ratingFatigue,
     int? ratingCalories,
     int? ratingSleep,
+    int? ratingStress,
   }) async {
     if (_activeSession == null) throw Exception('No hay sesión activa');
 
@@ -102,6 +103,7 @@ class SessionService extends ChangeNotifier {
       ratingFatigue: ratingFatigue,
       ratingCalories: ratingCalories,
       ratingSleep: ratingSleep,
+      ratingStress: ratingStress,
     );
 
     await _db.collection('sessions').doc(completed.id).set(completed.toMap());

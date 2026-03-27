@@ -30,6 +30,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
   int _ratingFatigue = 5;
   int _ratingCalories = 5;
   int _ratingSleep = 5;
+  int _ratingStress = 5;
 
   @override
   void initState() {
@@ -69,6 +70,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         ratingFatigue: _ratingFatigue,
         ratingCalories: _ratingCalories,
         ratingSleep: _ratingSleep,
+        ratingStress: _ratingStress,
       );
     } catch (e) {
       if (!mounted) return;
@@ -257,6 +259,15 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                 rightLabel: 'Descansado',
                 value: _ratingSleep,
                 onChanged: (v) => setState(() => _ratingSleep = v),
+              ),
+              const SizedBox(height: 12),
+              _WellnessSlider(
+                icon: Icons.self_improvement_outlined,
+                label: 'Estrés (últimas 24 h)',
+                leftLabel: 'Sin estrés',
+                rightLabel: 'Muy estresado',
+                value: _ratingStress,
+                onChanged: (v) => setState(() => _ratingStress = v),
               ),
 
               const SizedBox(height: 24),
