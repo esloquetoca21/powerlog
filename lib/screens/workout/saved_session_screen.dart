@@ -8,6 +8,7 @@ import '../../models/session_model.dart';
 import '../../models/set_model.dart';
 import '../../services/session_service.dart';
 import '../../widgets/add_exercise_sheet.dart';
+import '../../widgets/wellness_slider.dart';
 
 Color _setTypeColor(SetType t) => switch (t) {
       SetType.normal => Colors.transparent,
@@ -41,6 +42,13 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
   late TextEditingController _notesCtrl;
   late List<ExerciseModel> _exercises;
 
+  // Valoraciones de bienestar
+  late int _ratingMood;
+  late int _ratingFatigue;
+  late int _ratingCalories;
+  late int _ratingSleep;
+  late int _ratingStress;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +61,11 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
     _exercises = s.exercises.map((e) => e.copyWith(
       sets: List<SetModel>.from(e.sets),
     )).toList();
+    _ratingMood      = s.ratingMood      ?? 5;
+    _ratingFatigue   = s.ratingFatigue   ?? 5;
+    _ratingCalories  = s.ratingCalories  ?? 5;
+    _ratingSleep     = s.ratingSleep     ?? 5;
+    _ratingStress    = s.ratingStress    ?? 5;
   }
 
   @override
@@ -65,11 +78,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
   void _startEdit() => setState(() => _editing = true);
 
   void _cancelEdit() {
-    _titleCtrl.text = widget.session.title;
-    _notesCtrl.text = widget.session.notes ?? '';
-    _exercises = widget.session.exercises.map((e) => e.copyWith(
-      sets: List<SetModel>.from(e.sets),
-    )).toList();
+    _initControllers(widget.session);
     setState(() => _editing = false);
   }
 
@@ -85,6 +94,11 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
       title: title,
       exercises: _exercises,
       notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+      ratingMood: _ratingMood,
+      ratingFatigue: _ratingFatigue,
+      ratingCalories: _ratingCalories,
+      ratingSleep: _ratingSleep,
+      ratingStress: _ratingStress,
     );
 
     try {
@@ -294,6 +308,94 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
               ],
             ),
 
+            const SizedBox(height: 20),
+
+            // ── Bienestar ─────────────────────────────────────────────
+            _SectionTitle('Bienestar del día'),
+            const SizedBox(height: 10),
+            if (_editing) ...[
+              WellnessSlider(
+                icon: Icons.sentiment_satisfied_alt_outlined,
+                label: 'Sensación del entrenamiento',
+                leftLabel: 'Malo', rightLabel: 'Bueno',
+                value: _ratingMood,
+                onChanged: (v) => setState(() => _ratingMood = v),
+              ),
+              const SizedBox(height: 8),
+              WellnessSlider(
+                icon: Icons.battery_alert_outlined,
+                label: 'Fatiga percibida',
+                leftLabel: 'Poca', rightLabel: 'Mucha',
+                value: _ratingFatigue,
+                onChanged: (v) => setState(() => _ratingFatigue = v),
+              ),
+              const SizedBox(height: 8),
+              WellnessSlider(
+                icon: Icons.restaurant_outlined,
+                label: 'Ingesta calórica (últimas 24 h)',
+                leftLabel: 'Déficit', rightLabel: 'Superávit',
+                value: _ratingCalories,
+                onChanged: (v) => setState(() => _ratingCalories = v),
+              ),
+              const SizedBox(height: 8),
+              WellnessSlider(
+                icon: Icons.bedtime_outlined,
+                label: 'Calidad del sueño',
+                leftLabel: 'Mal descanso', rightLabel: 'Descansado',
+                value: _ratingSleep,
+                onChanged: (v) => setState(() => _ratingSleep = v),
+              ),
+              const SizedBox(height: 8),
+              WellnessSlider(
+                icon: Icons.self_improvement_outlined,
+                label: 'Estrés (últimas 24 h)',
+                leftLabel: 'Sin estrés', rightLabel: 'Muy estresado',
+                value: _ratingStress,
+                onChanged: (v) => setState(() => _ratingStress = v),
+              ),
+            ] else
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  children: [
+                    WellnessRatingRow(
+                      icon: Icons.sentiment_satisfied_alt_outlined,
+                      label: 'Sensación',
+                      leftLabel: 'Malo', rightLabel: 'Bueno',
+                      value: session.ratingMood ?? _ratingMood,
+                    ),
+                    WellnessRatingRow(
+                      icon: Icons.battery_alert_outlined,
+                      label: 'Fatiga',
+                      leftLabel: 'Poca', rightLabel: 'Mucha',
+                      value: session.ratingFatigue ?? _ratingFatigue,
+                    ),
+                    WellnessRatingRow(
+                      icon: Icons.restaurant_outlined,
+                      label: 'Ingesta calórica',
+                      leftLabel: 'Déficit', rightLabel: 'Superávit',
+                      value: session.ratingCalories ?? _ratingCalories,
+                    ),
+                    WellnessRatingRow(
+                      icon: Icons.bedtime_outlined,
+                      label: 'Calidad del sueño',
+                      leftLabel: 'Mal descanso', rightLabel: 'Descansado',
+                      value: session.ratingSleep ?? _ratingSleep,
+                    ),
+                    WellnessRatingRow(
+                      icon: Icons.self_improvement_outlined,
+                      label: 'Estrés',
+                      leftLabel: 'Sin estrés', rightLabel: 'Muy estresado',
+                      value: session.ratingStress ?? _ratingStress,
+                    ),
+                  ],
+                ),
+              ),
+
             const SizedBox(height: 24),
 
             // ── Ejercicios ────────────────────────────────────────────
@@ -479,6 +581,41 @@ class _StatChip extends StatelessWidget {
   }
 }
 
+// ── Mini stat chip ────────────────────────────────────────────────────────────
+
+class _MiniStat extends StatelessWidget {
+  final String label;
+  final bool accent;
+  final Color? color;
+  const _MiniStat({required this.label, this.accent = false, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = color ?? (accent ? const Color(0xFFE53935) : null);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: (c ?? Colors.white).withOpacity(0.07),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+            color: c ?? Colors.white.withOpacity(0.55),
+            fontSize: 11,
+            fontWeight: accent ? FontWeight.w600 : FontWeight.normal),
+      ),
+    );
+  }
+}
+
+String _setTypeFullLabel(SetType t) => switch (t) {
+      SetType.normal => '',
+      SetType.failure => 'Hasta el fallo',
+      SetType.dropSet => 'Drop set',
+      SetType.restPause => 'Rest-pause',
+    };
+
 // ── Exercise block ────────────────────────────────────────────────────────────
 
 class _ExerciseBlock extends StatelessWidget {
@@ -500,6 +637,25 @@ class _ExerciseBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ── Estadísticas del ejercicio ───────────────────────────────────
+    final best1rm = exercise.bestEstimated1RM;
+    final volume  = exercise.totalVolume;
+    final avgRpe  = exercise.averageRpe;
+    // RPE o RIR: mostrar RIR si está disponible en alguna serie
+    final hasRir  = exercise.sets.any((s) => s.rir != null);
+    final avgRir  = hasRir
+        ? exercise.sets.where((s) => s.rir != null).fold(0.0, (a, s) => a + s.rir!) /
+          exercise.sets.where((s) => s.rir != null).length
+        : null;
+    final effortLabel = hasRir
+        ? 'RIR ${avgRir!.toStringAsFixed(1)}'
+        : avgRpe != null
+            ? 'RPE ${avgRpe.toStringAsFixed(1)}'
+            : null;
+
+    // Tipos de serie especiales
+    final specialSets = exercise.sets.where((s) => s.setType != SetType.normal).toList();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -509,9 +665,9 @@ class _ExerciseBlock extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // ── Header ──────────────────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 8, 8),
+            padding: const EdgeInsets.fromLTRB(14, 12, 8, 4),
             child: Row(
               children: [
                 Expanded(
@@ -533,11 +689,70 @@ class _ExerciseBlock extends StatelessWidget {
             ),
           ),
 
-          // Column headers
+          // ── Stats detalladas ────────────────────────────────────────
+          if (!editing)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  _MiniStat(label: '${exercise.sets.length} series'),
+                  _MiniStat(label: '${volume} kg vol.'),
+                  if (best1rm > 0)
+                    _MiniStat(
+                      label: '1RM ~${best1rm.toStringAsFixed(1)} kg',
+                      accent: true,
+                    ),
+                  if (effortLabel != null)
+                    _MiniStat(label: 'Ø $effortLabel'),
+                  for (final s in specialSets)
+                    _MiniStat(
+                      label: _setTypeFullLabel(s.setType),
+                      color: _setTypeColor(s.setType),
+                    ),
+                ],
+              ),
+            ),
+
+          // ── Notas del ejercicio ─────────────────────────────────────
+          if (exercise.notes != null && exercise.notes!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.04),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                      color: Colors.white.withOpacity(0.07)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.notes_outlined,
+                        color: Colors.white.withOpacity(0.3), size: 13),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(exercise.notes!,
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(0.55),
+                              fontSize: 12,
+                              height: 1.4)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          // ── Cabecera de columnas ─────────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Row(
               children: [
+                if (!editing) const SizedBox(width: 20), // tipo
                 SizedBox(
                   width: 28,
                   child: Text('#',
@@ -558,8 +773,8 @@ class _ExerciseBlock extends StatelessWidget {
                           fontSize: 11)),
                 ),
                 SizedBox(
-                  width: 52,
-                  child: Text('RPE',
+                  width: 60,
+                  child: Text(hasRir ? 'RIR' : 'RPE',
                       style: TextStyle(
                           color: Colors.white.withOpacity(0.3),
                           fontSize: 11)),
@@ -571,19 +786,37 @@ class _ExerciseBlock extends StatelessWidget {
 
           const SizedBox(height: 4),
 
-          // Sets
+          // ── Series ───────────────────────────────────────────────────
           ...exercise.sets.asMap().entries.map((entry) {
             final i = entry.key;
             final set = entry.value;
-            return _SetRow(
-              set: set,
-              editing: editing,
-              onRemove: () => onRemoveSet(i),
-              onUpdate: (updated) => onUpdateSet(i, updated),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SetRow(
+                  set: set,
+                  editing: editing,
+                  showType: !editing,
+                  onRemove: () => onRemoveSet(i),
+                  onUpdate: (updated) => onUpdateSet(i, updated),
+                ),
+                // Nota de la serie
+                if (!editing && set.notes != null && set.notes!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(42, 0, 14, 4),
+                    child: Text(
+                      '↳ ${set.notes!}',
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 11,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ),
+              ],
             );
           }),
 
-          // Add set button
+          // ── Añadir serie ─────────────────────────────────────────────
           if (editing)
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 4, 14, 12),
@@ -616,12 +849,14 @@ class _ExerciseBlock extends StatelessWidget {
 class _SetRow extends StatefulWidget {
   final SetModel set;
   final bool editing;
+  final bool showType;
   final VoidCallback onRemove;
   final ValueChanged<SetModel> onUpdate;
 
   const _SetRow({
     required this.set,
     required this.editing,
+    this.showType = false,
     required this.onRemove,
     required this.onUpdate,
   });
@@ -676,6 +911,30 @@ class _SetRowState extends State<_SetRow> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         child: Row(
           children: [
+            // Badge tipo de serie
+            if (widget.showType)
+              SizedBox(
+                width: 20,
+                child: widget.set.setType != SetType.normal
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 3, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: _setTypeColor(widget.set.setType)
+                              .withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Text(
+                          _setTypeLabel(widget.set.setType),
+                          style: TextStyle(
+                              color: _setTypeColor(widget.set.setType),
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : null,
+              ),
             SizedBox(
               width: 28,
               child: Text('${widget.set.setNumber}',
@@ -706,22 +965,6 @@ class _SetRowState extends State<_SetRow> {
                     color: Colors.white.withOpacity(0.4), fontSize: 12),
               ),
             ),
-            if (widget.set.setType != SetType.normal)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 5, vertical: 2),
-                decoration: BoxDecoration(
-                  color: _setTypeColor(widget.set.setType).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  _setTypeLabel(widget.set.setType),
-                  style: TextStyle(
-                      color: _setTypeColor(widget.set.setType),
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
           ],
         ),
       );
