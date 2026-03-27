@@ -110,10 +110,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
         ],
       ),
     );
-    if (confirmed == true) {
-      if (mounted) context.read<SessionService>().cancelSession();
+    if (confirmed == true && mounted) {
+      context.read<SessionService>().cancelSession();
+      Navigator.of(context).pop();
     }
-    return confirmed ?? false;
+    return false; // PopScope gestiona la navegación manualmente
   }
 
   @override
