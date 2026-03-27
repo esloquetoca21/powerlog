@@ -5,7 +5,7 @@ import '../../services/auth_service.dart';
 import '../../widgets/auth_widgets.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
-import '../home/home_screen.dart';
+import '../home/main_screen.dart';
 import 'register_screen.dart';
 import 'role_selection_screen.dart';
 
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _goToDashboard() {
     final auth = context.read<AuthService>();
     final Widget dest = auth.isProfileComplete
-        ? const HomeScreen()
+        ? const MainScreen()
         : const RoleSelectionScreen();
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => dest),

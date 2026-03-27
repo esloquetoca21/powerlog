@@ -6,7 +6,7 @@ import '../../models/session_model.dart';
 import '../../services/ai_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/primary_button.dart';
-import '../home/home_screen.dart';
+import '../home/main_screen.dart';
 
 class SessionDetailScreen extends StatefulWidget {
   final Duration duration;
@@ -74,7 +74,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
 
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => const MainScreen()),
       (_) => false,
     );
   }

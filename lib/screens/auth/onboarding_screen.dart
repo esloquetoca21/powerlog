@@ -6,7 +6,7 @@ import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
-import '../home/home_screen.dart';
+import '../home/main_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -86,7 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     setState(() => _saving = false);
 
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => const MainScreen()),
       (_) => false,
     );
   }

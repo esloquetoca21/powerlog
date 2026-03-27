@@ -4,28 +4,10 @@ import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/session_card.dart';
-import '../progress/progress_screen.dart';
-import '../profile/profile_screen.dart';
 import '../workout/new_session_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final auth = context.read<AuthService>();
-      if (auth.currentUser != null) {
-        context.read<SessionService>().loadSessions(auth.currentUser!.uid);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 140,
+            expandedHeight: 120,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
-                'PowerLog',
-                style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1),
+                'Historial',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               background: Container(
                 decoration: const BoxDecoration(
@@ -53,51 +36,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.bar_chart_outlined),
-                tooltip: 'Progreso',
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProgressScreen()),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.person_outline),
-                tooltip: 'Perfil',
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                ),
-              ),
-            ],
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hola, ${auth.currentUser?.displayName ?? "Atleta"}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${sessionService.sessions.length} sesiones registradas',
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.5), fontSize: 14),
-                  ),
-                ],
+              padding:
+                  const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Text(
+                '${sessionService.sessions.length} sesiones registradas',
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 13),
               ),
             ),
           ),
           if (sessionService.isLoading)
             const SliverFillRemaining(
               child: Center(
-                child: CircularProgressIndicator(color: Color(0xFFE53935)),
+                child: CircularProgressIndicator(
+                    color: Color(0xFFE53935)),
               ),
             )
           else if (sessionService.sessions.isEmpty)
@@ -112,13 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       'Sin sesiones aún',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4), fontSize: 16),
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Pulsa + para empezar',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3), fontSize: 14),
+                          color: Colors.white.withOpacity(0.3),
+                          fontSize: 14),
                     ),
                   ],
                 ),
@@ -126,12 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           else
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: SessionCard(session: sessionService.sessions[index]),
+                    child: SessionCard(
+                        session: sessionService.sessions[index]),
                   ),
                   childCount: sessionService.sessions.length,
                 ),
@@ -145,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: const Color(0xFFE53935),
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Sesión', style: TextStyle(color: Colors.white)),
+        label:
+            const Text('Sesión', style: TextStyle(color: Colors.white)),
       ),
     );
   }

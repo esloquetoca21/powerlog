@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import 'auth/login_screen.dart';
 import 'auth/role_selection_screen.dart';
-import 'home/home_screen.dart';
+import 'home/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
     } else if (!auth.isProfileComplete) {
       destination = const RoleSelectionScreen();
     } else {
-      destination = const HomeScreen();
+      destination = const MainScreen();
     }
 
     Navigator.of(context).pushReplacement(

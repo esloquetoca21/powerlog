@@ -138,7 +138,7 @@ docs/
 | Home / lista de sesiones | `screens/home/home_screen.dart` | ✅ Hecha |
 | Nueva sesión | `screens/workout/new_session_screen.dart` | ✅ Hecha |
 | Sesión activa | `screens/workout/active_session_screen.dart` | ✅ Hecha |
-| Dashboard (próx. sesión, racha, semana) | `screens/home/dashboard_screen.dart` | ⬜ Pendiente |
+| Dashboard (próx. sesión, racha, semana) | `screens/home/dashboard_screen.dart` | ✅ Hecha |
 | Análisis post-sesión + IA | `screens/workout/session_detail_screen.dart` | ✅ Hecha |
 | Progreso (gráficas, récords, Wilks, DOTS) | `screens/progress/progress_screen.dart` | ✅ Hecha |
 | Mi plan / Calendario (semanal + macrociclo) | `screens/plan/calendar_screen.dart` | ⬜ Pendiente |
