@@ -6,6 +6,8 @@ import 'package:uuid/uuid.dart';
 import '../../models/exercise_model.dart';
 import '../../models/session_model.dart';
 import '../../models/set_model.dart';
+import '../../services/session_service.dart';
+import '../../widgets/add_exercise_sheet.dart';
 
 Color _setTypeColor(SetType t) => switch (t) {
       SetType.normal => Colors.transparent,
@@ -20,8 +22,6 @@ String _setTypeLabel(SetType t) => switch (t) {
       SetType.dropSet => 'DS',
       SetType.restPause => 'RP',
     };
-import '../../services/session_service.dart';
-import '../../widgets/add_exercise_sheet.dart';
 
 class SavedSessionScreen extends StatefulWidget {
   final SessionModel session;
