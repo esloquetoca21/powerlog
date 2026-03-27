@@ -232,10 +232,10 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
   List<String> get _filteredExercises {
     final query = _searchController.text.toLowerCase().trim();
     if (query.isEmpty) {
-      return exercises[_selectedCategory] ?? [];
+      return AddExerciseSheet.exercises[_selectedCategory] ?? [];
     }
     // Con texto: busca en todas las categorías
-    return exercises.values
+    return AddExerciseSheet.exercises.values
         .expand((list) => list)
         .where((e) => e.toLowerCase().contains(query))
         .toList();
