@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
 import 'auth/login_screen.dart';
+import 'auth/role_selection_screen.dart';
 import 'home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,8 +41,14 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final auth = context.read<AuthService>();
-    final destination =
-        auth.isAuthenticated ? const HomeScreen() : const LoginScreen();
+    final Widget destination;
+    if (!auth.isAuthenticated) {
+      destination = const LoginScreen();
+    } else if (!auth.isProfileComplete) {
+      destination = const RoleSelectionScreen();
+    } else {
+      destination = const HomeScreen();
+    }
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => destination),

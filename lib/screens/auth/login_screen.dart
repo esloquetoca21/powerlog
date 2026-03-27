@@ -7,6 +7,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
 import '../home/home_screen.dart';
 import 'register_screen.dart';
+import 'role_selection_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,8 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _goToDashboard() {
+    final auth = context.read<AuthService>();
+    final Widget dest = auth.isProfileComplete
+        ? const HomeScreen()
+        : const RoleSelectionScreen();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => dest),
       (_) => false,
     );
   }

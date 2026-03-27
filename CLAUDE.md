@@ -129,8 +129,8 @@ docs/
 | Splash | `screens/splash_screen.dart` | ✅ Hecha |
 | Login | `screens/auth/login_screen.dart` | ✅ Hecha (email+pass, Google, olvidé contraseña) |
 | Registro | `screens/auth/register_screen.dart` | ✅ Hecha (email+pass, confirmar, Google) |
-| Perfil inicial (onboarding) | `screens/auth/onboarding_screen.dart` | ⬜ Pendiente |
-| Selección de rol | `screens/auth/role_selection_screen.dart` | ⬜ Pendiente |
+| Perfil inicial (onboarding) | `screens/auth/onboarding_screen.dart` | ✅ Hecha |
+| Selección de rol | `screens/auth/role_selection_screen.dart` | ✅ Hecha |
 
 ### Flujo del atleta
 | Pantalla | Archivo | Estado |

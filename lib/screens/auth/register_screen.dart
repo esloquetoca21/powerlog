@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_service.dart';
 import '../../widgets/auth_widgets.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
-import '../home/home_screen.dart';
+import '../../services/auth_service.dart';
+import 'role_selection_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _goToDashboard() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
       (_) => false,
     );
   }

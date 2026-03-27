@@ -18,6 +18,7 @@ class AuthService extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _currentUser != null;
+  bool get isProfileComplete => _currentUser?.onboardingCompleted ?? false;
 
   AuthService() {
     _auth.authStateChanges().listen(_onAuthStateChanged);
@@ -171,6 +172,19 @@ class AuthService extends ChangeNotifier {
     ]);
     _currentUser = null;
     notifyListeners();
+  }
+
+  // ── Profile ───────────────────────────────────────────────────────────────
+
+  Future<void> updateProfile(UserModel updated) async {
+    try {
+      await _db.collection('users').doc(updated.uid).set(updated.toMap());
+      _currentUser = updated;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error updating profile: $e');
+      rethrow;
+    }
   }
 
   // ── Helpers públicos ──────────────────────────────────────────────────────
