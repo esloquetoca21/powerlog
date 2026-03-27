@@ -143,7 +143,7 @@ docs/
 | Progreso (gráficas, récords, Wilks, DOTS) | `screens/progress/progress_screen.dart` | ✅ Hecha |
 | Mi plan / Calendario (semanal + macrociclo) | `screens/plan/calendar_screen.dart` | ⬜ Pendiente |
 | Crear / editar plan (manual, IA, entrenador) | `screens/plan/plan_builder_screen.dart` | ⬜ Pendiente |
-| Perfil y configuración | `screens/profile/profile_screen.dart` | ⬜ Pendiente |
+| Perfil y configuración | `screens/profile/profile_screen.dart` | ✅ Hecha |
 
 ### Flujo del entrenador
 | Pantalla | Archivo | Estado |

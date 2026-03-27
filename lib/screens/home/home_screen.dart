@@ -5,8 +5,8 @@ import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/session_card.dart';
 import '../progress/progress_screen.dart';
+import '../profile/profile_screen.dart';
 import '../workout/new_session_screen.dart';
-import '../auth/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,16 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<SessionService>().loadSessions(auth.currentUser!.uid);
       }
     });
-  }
-
-  Future<void> _signOut() async {
-    await context.read<AuthService>().signOut();
-    if (mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-        (_) => false,
-      );
-    }
   }
 
   @override
@@ -68,13 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.bar_chart_outlined),
                 tooltip: 'Progreso',
                 onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => const ProgressScreen()),
+                  MaterialPageRoute(builder: (_) => const ProgressScreen()),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: _signOut,
+                icon: const Icon(Icons.person_outline),
+                tooltip: 'Perfil',
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                ),
               ),
             ],
           ),
