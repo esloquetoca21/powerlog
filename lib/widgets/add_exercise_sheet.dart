@@ -20,38 +20,206 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
 
   static const Map<ExerciseCategory, List<String>> _exercises = {
     ExerciseCategory.squat: [
+      // Sentadilla competición y variantes principales
       'Sentadilla',
       'Sentadilla con pausa',
+      'Sentadilla con pausa en el fondo',
+      'Sentadilla con pausa en el paralelo',
       'Sentadilla frontal',
+      'Sentadilla frontal con pausa',
+      'Sentadilla zombie (brazos al frente)',
+      // Variantes de potencia
       'Box Squat',
+      'Box Squat con bandas',
+      'Sentadilla con cadenas',
+      'Sentadilla con bandas',
+      'Sentadilla pin (desde el rack)',
+      'Sentadilla hasta paralelo',
+      'Sentadilla media (half squat)',
+      // Variantes de postura
       'Sentadilla búlgara',
+      'Sentadilla búlgara con mancuernas',
+      'Sentadilla sumo (stance ancho)',
+      'Sentadilla goblet',
+      'Sentadilla Hack',
+      'Sentadilla con talones elevados',
+      'Sentadilla con puntas elevadas',
+      // Máquinas y accesorio de pierna
       'Prensa de pierna',
+      'Prensa de pierna (un solo pie)',
+      'Prensa de pierna (pies juntos)',
+      'Sentadilla en Smith',
+      'Sentadilla en Smith frontal',
+      'Hack Squat (máquina)',
+      'Extensión de cuádriceps',
+      'Extensión de cuádriceps unilateral',
+      'Leg Press 45°',
+      // Peso corporal / estabilidad
+      'Sentadilla con salto',
+      'Pistol Squat',
+      'Step-up con barra',
+      'Step-up con mancuernas',
+      'Zancada con barra',
+      'Zancada con mancuernas',
+      'Zancada caminando',
+      'Zancada inversa',
+      'Zancada lateral',
     ],
     ExerciseCategory.bench: [
+      // Press banca competición y variantes principales
       'Press de banca',
       'Press de banca con pausa',
+      'Press de banca con pausa larga',
       'Press de banca agarre cerrado',
-      'Press inclinado',
-      'Press con mancuernas',
+      'Press de banca agarre cerrado con pausa',
+      'Press de banca agarre ancho',
+      'Press de banca con bandas',
+      'Press de banca con cadenas',
+      // Variantes de inclinación
+      'Press inclinado con barra',
+      'Press inclinado con mancuernas',
+      'Press declinado con barra',
+      'Press declinado con mancuernas',
+      // Mancuernas y pesas rusas
+      'Press con mancuernas (plano)',
+      'Press con mancuernas (neutro)',
+      'Press con kettlebell',
+      // Accesorios de pecho
+      'Apertura con mancuernas (plano)',
+      'Apertura con mancuernas (inclinado)',
+      'Apertura en polea (crossover)',
+      'Apertura en máquina',
+      'Aperturas con bandas',
+      // Tríceps directo (apoyo banca)
       'Fondos',
+      'Fondos con lastre',
+      'Fondos en paralelas',
+      'Extensión de tríceps tumbado (Skullcrusher)',
+      'Extensión de tríceps con EZ',
+      'Extensión de tríceps en polea alta',
+      'Extensión de tríceps en polea baja',
+      'Extensión de tríceps por encima de la cabeza',
+      'Press francés con mancuernas',
+      'Patada de tríceps con mancuernas',
+      'Patada de tríceps en polea',
+      'Tríceps en banco (dips de banco)',
+      // Press militar (hombro, apoyo banca)
+      'Press militar con barra',
+      'Press militar con mancuernas',
+      'Press Arnold',
+      'Press de hombro en máquina',
+      'Press trasnuca',
     ],
     ExerciseCategory.deadlift: [
+      // Peso muerto competición y variantes principales
       'Peso muerto',
-      'Peso muerto rumano',
-      'Peso muerto sumo',
       'Peso muerto con pausa',
-      'Good morning',
-      'Hip thrust',
+      'Peso muerto con pausa en rodillas',
+      'Peso muerto con pausa por encima de rodillas',
+      'Peso muerto sumo',
+      'Peso muerto sumo con pausa',
+      'Peso muerto sumo déficit',
+      'Peso muerto desde el pin (rack pull)',
+      'Peso muerto déficit',
+      'Peso muerto con bandas',
+      'Peso muerto con cadenas',
+      // Variantes de cadera y femoral
+      'Peso muerto rumano',
+      'Peso muerto rumano con mancuernas',
+      'Peso muerto rumano unilateral',
+      'Peso muerto stiff leg',
+      'Peso muerto en valija (suitcase)',
+      // Hip thrust y glúteos
+      'Hip thrust con barra',
+      'Hip thrust con mancuerna',
+      'Hip thrust en máquina',
+      'Hip thrust unilateral',
+      'Patada de glúteo en polea',
+      'Patada de glúteo en cuadrupedia',
+      'Puente de glúteo',
+      'Puente de glúteo unilateral',
+      // Isquiotibiales
+      'Good morning con barra',
+      'Good morning sentado',
+      'Curl de femoral tumbado',
+      'Curl de femoral sentado',
+      'Curl de femoral de pie (máquina)',
+      'Curl nórdico',
+      'Curl de femoral con pelota suiza',
+      // Espalda baja y core
+      'Hiperextensión (espalda baja)',
+      'Hiperextensión inversa',
+      'Hiperextensión 45°',
+      'Superman',
+      'Pallof press',
     ],
     ExerciseCategory.accessory: [
-      'Remo con barra',
+      // Espalda (tracción vertical)
       'Dominadas',
-      'Curl de bíceps',
-      'Extensión de tríceps',
-      'Face pull',
+      'Dominadas con lastre',
+      'Dominadas agarre supino (chin-ups)',
       'Jalón al pecho',
-      'Curl de femoral',
-      'Extensión de cuádriceps',
+      'Jalón al pecho agarre cerrado',
+      'Jalón al pecho agarre supino',
+      'Jalón al pecho con un brazo',
+      'Pullover con mancuerna',
+      'Pullover en polea',
+      // Espalda (tracción horizontal)
+      'Remo con barra',
+      'Remo con barra (pronado)',
+      'Remo con barra (supino / Yates row)',
+      'Remo con mancuerna',
+      'Remo en polea baja',
+      'Remo en polea alta',
+      'Remo en máquina (pecho apoyado)',
+      'Remo TRX / anillas',
+      'Face pull',
+      'Face pull con rotación externa',
+      // Hombros (aislamiento)
+      'Elevación lateral con mancuernas',
+      'Elevación lateral en polea',
+      'Elevación frontal con mancuernas',
+      'Elevación frontal con barra',
+      'Pájaro (elevación posterior)',
+      'Pájaro en polea',
+      // Bíceps
+      'Curl de bíceps con barra',
+      'Curl de bíceps con mancuernas',
+      'Curl martillo',
+      'Curl martillo con cuerda',
+      'Curl predicador (Scott)',
+      'Curl concentrado',
+      'Curl en polea baja',
+      'Curl araña',
+      // Trapecios y cuello
+      'Encogimientos con barra',
+      'Encogimientos con mancuernas',
+      'Encogimientos en máquina',
+      // Core y abdomen
+      'Plancha',
+      'Plancha lateral',
+      'Plancha con desplazamiento',
+      'Rueda abdominal',
+      'Crunch',
+      'Crunch en polea',
+      'Elevación de piernas tumbado',
+      'Elevación de piernas en barra',
+      'Dragon flag',
+      'Tijeras',
+      'Rotación rusa',
+      // Pantorrillas
+      'Gemelos de pie',
+      'Gemelos sentado',
+      'Gemelos en prensa',
+      // Cardio / Potencia
+      'Remo ergómetro',
+      'Assault bike',
+      'Salto a cajón (box jump)',
+      'Salto con cuerda',
+      'Swing con kettlebell',
+      'Turkish get-up',
+      'Clean con barra',
+      'Push press con barra',
     ],
   };
 
@@ -62,10 +230,15 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
   }
 
   List<String> get _filteredExercises {
-    final query = _searchController.text.toLowerCase();
-    final base = _exercises[_selectedCategory] ?? [];
-    if (query.isEmpty) return base;
-    return base.where((e) => e.toLowerCase().contains(query)).toList();
+    final query = _searchController.text.toLowerCase().trim();
+    if (query.isEmpty) {
+      return _exercises[_selectedCategory] ?? [];
+    }
+    // Con texto: busca en todas las categorías
+    return _exercises.values
+        .expand((list) => list)
+        .where((e) => e.toLowerCase().contains(query))
+        .toList();
   }
 
   void _selectExercise(String name) {
