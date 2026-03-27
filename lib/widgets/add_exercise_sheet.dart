@@ -9,15 +9,6 @@ import '../services/session_service.dart';
 class AddExerciseSheet extends StatefulWidget {
   const AddExerciseSheet({super.key});
 
-  @override
-  State<AddExerciseSheet> createState() => _AddExerciseSheetState();
-}
-
-class _AddExerciseSheetState extends State<AddExerciseSheet> {
-  static const _uuid = Uuid();
-  final _searchController = TextEditingController();
-  ExerciseCategory _selectedCategory = ExerciseCategory.squat;
-
   static const Map<ExerciseCategory, List<String>> exercises = {
     ExerciseCategory.squat: [
       // Sentadilla competición y variantes principales
@@ -222,6 +213,15 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
       'Push press con barra',
     ],
   };
+
+  @override
+  State<AddExerciseSheet> createState() => _AddExerciseSheetState();
+}
+
+class _AddExerciseSheetState extends State<AddExerciseSheet> {
+  static const _uuid = Uuid();
+  final _searchController = TextEditingController();
+  ExerciseCategory _selectedCategory = ExerciseCategory.squat;
 
   @override
   void dispose() {
