@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/session_model.dart';
 
@@ -10,7 +9,7 @@ class SessionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = DateFormat('EEE, d MMM', 'es').format(session.date);
+    final dateStr = _formatDate(session.date);
     final duration = session.duration != null
         ? '${session.duration!.inMinutes} min'
         : null;
@@ -77,6 +76,15 @@ class SessionCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatDate(DateTime date) {
+  const weekdays = ['', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
+  const months = [
+    '', 'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+    'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
+  ];
+  return '${weekdays[date.weekday]}, ${date.day} ${months[date.month]}';
 }
 
 class _ExerciseChip extends StatelessWidget {
