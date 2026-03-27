@@ -26,13 +26,13 @@ class SessionService extends ChangeNotifier {
       final snapshot = await _db
           .collection('sessions')
           .where('userId', isEqualTo: userId)
-          .orderBy('timestamp', descending: true)
           .limit(50)
           .get();
 
       _sessions = snapshot.docs
           .map((doc) => SessionModel.fromMap(doc.data()))
-          .toList();
+          .toList()
+        ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     } catch (e) {
       debugPrint('Error loading sessions: $e');
     } finally {
