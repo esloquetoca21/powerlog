@@ -87,7 +87,10 @@ class AuthService extends ChangeNotifier {
     _setLoading(true);
     _clearError();
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      await _loadUserData(credential.user!.uid);
+      notifyListeners();
       return true;
     } on FirebaseAuthException catch (e) {
       _setError(_mapAuthError(e.code));
@@ -133,7 +136,11 @@ class AuthService extends ChangeNotifier {
         _currentUser = user;
         notifyListeners();
       }
-      // Si el doc ya existe, _onAuthStateChanged → _loadUserData lo gestiona
+      // Si el doc ya existe, cargamos explícitamente para garantizar timing
+      if (doc.exists) {
+        _currentUser = UserModel.fromMap(doc.data()!);
+        notifyListeners();
+      }
 
       return true;
     } on FirebaseAuthException catch (e) {
