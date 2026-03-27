@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
+import '../../widgets/auth_widgets.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
 import '../home/home_screen.dart';
-import 'login_screen.dart'
-    show _ErrorBanner, _OrDivider, _GoogleButton; // widgets compartidos
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -183,7 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // ── Error banner ──────────────────────────────────────────
                 if (auth.errorMessage != null) ...[
-                  _ErrorBanner(message: auth.errorMessage!),
+                  AuthErrorBanner(message: auth.errorMessage!),
                   const SizedBox(height: 16),
                 ],
 
@@ -197,12 +196,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 24),
 
                 // ── Separador ─────────────────────────────────────────────
-                _OrDivider(),
+                const AuthOrDivider(),
 
                 const SizedBox(height: 24),
 
                 // ── Google ────────────────────────────────────────────────
-                _GoogleButton(
+                GoogleSignInButton(
                   onPressed: _signInWithGoogle,
                   isLoading: auth.isLoading,
                 ),
