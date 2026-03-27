@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/session_card.dart';
+import '../progress/progress_screen.dart';
 import '../workout/new_session_screen.dart';
 import '../auth/login_screen.dart';
 
@@ -63,6 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.bar_chart_outlined),
+                tooltip: 'Progreso',
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => const ProgressScreen()),
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: _signOut,
