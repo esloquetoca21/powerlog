@@ -67,7 +67,7 @@ class _MuscleMapWidgetState extends State<MuscleMapWidget> {
   /// Falls back to direct element coloring for non-group elements.
   String _colorMuscle(String svg, String muscleId, String color) {
     final openTag = '<g id="$muscleId">';
-    final closeTag = '</g>';
+    const closeTag = '</g>';
 
     final start = svg.indexOf(openTag);
     if (start != -1) {
