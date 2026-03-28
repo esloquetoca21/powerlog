@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/exercise_def_model.dart';
 import '../../models/exercise_pref_model.dart';
@@ -1414,10 +1414,20 @@ class _VideoTabState extends State<_VideoTab> {
               ? widget.def.videoUrl
               : null);
 
+  String? _extractYoutubeId(String url) {
+    final watch = RegExp(r'[?&]v=([a-zA-Z0-9_-]{11})').firstMatch(url);
+    if (watch != null) return watch.group(1);
+    final short = RegExp(r'youtu\.be/([a-zA-Z0-9_-]{11})').firstMatch(url);
+    if (short != null) return short.group(1);
+    final embed = RegExp(r'youtube\.com/embed/([a-zA-Z0-9_-]{11})').firstMatch(url);
+    if (embed != null) return embed.group(1);
+    return null;
+  }
+
   String? get _videoId {
     final url = _effectiveUrl;
     if (url == null) return null;
-    return YoutubePlayer.convertUrlToId(url);
+    return _extractYoutubeId(url);
   }
 
   Future<void> _openUrlDialog({bool editing = false}) async {
@@ -1509,7 +1519,7 @@ class _VideoTabState extends State<_VideoTab> {
                       errorText = 'La URL debe ser de YouTube.');
                   return;
                 }
-                final id = YoutubePlayer.convertUrlToId(url);
+                final id = _extractYoutubeId(url);
                 if (id == null) {
                   setDialogState(() =>
                       errorText = 'No se reconoce como vídeo de YouTube.');
@@ -1566,16 +1576,16 @@ class _VideoTabState extends State<_VideoTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (videoId != null) ...[
-            // Thumbnail + player
+            // Thumbnail + open in YouTube
             _VideoThumbnail(
               videoId: videoId,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      _YoutubePlayerScreen(videoId: videoId),
-                ),
-              ),
+              onTap: () {
+                final url = _effectiveUrl;
+                if (url != null) {
+                  launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
             ),
             const SizedBox(height: 6),
             if (hasCustom)
@@ -1738,64 +1748,6 @@ class _VideoThumbnail extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ── Fullscreen YouTube player screen ─────────────────────────────────────────
-
-class _YoutubePlayerScreen extends StatefulWidget {
-  final String videoId;
-
-  const _YoutubePlayerScreen({required this.videoId});
-
-  @override
-  State<_YoutubePlayerScreen> createState() => _YoutubePlayerScreenState();
-}
-
-class _YoutubePlayerScreenState extends State<_YoutubePlayerScreen> {
-  late YoutubePlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
-        mute: false,
-        enableCaption: false,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return YoutubePlayerBuilder(
-      player: YoutubePlayer(
-        controller: _controller,
-        showVideoProgressIndicator: true,
-        progressIndicatorColor: const Color(0xFFE53935),
-        progressColors: const ProgressBarColors(
-          playedColor: Color(0xFFE53935),
-          handleColor: Color(0xFFE53935),
-        ),
-      ),
-      builder: (context, player) => Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: Center(child: player),
       ),
     );
   }

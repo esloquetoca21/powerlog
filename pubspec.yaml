@@ -30,7 +30,7 @@ dependencies:
   shared_preferences: ^2.3.2
   fl_chart: ^0.68.0
   image_picker: ^1.0.4
-  youtube_player_flutter: ^8.1.2
+  url_launcher: ^6.3.0
   flutter_svg: ^2.0.9
   cached_network_image: ^3.3.0
 
@@ -38,11 +38,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-
-dependency_overrides:
-  # flutter_inappwebview 5.x (required by youtube_player_flutter 8.x) lacks the
-  # Android namespace declaration needed by AGP 8+. Override to 6.x which adds it.
-  flutter_inappwebview: ^6.1.5
 
 flutter:
   uses-material-design: true
