@@ -657,7 +657,7 @@ class _ExerciseListTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    '${exercise.primaryMuscle} · ${exercise.categoryLabel}',
+                    '${formatMuscleName(exercise.primaryMuscle)} · ${exercise.categoryLabel}',
                     style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.45),
                         fontSize: 12),
@@ -763,7 +763,7 @@ class _ExerciseGridCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      exercise.primaryMuscle,
+                      formatMuscleName(exercise.primaryMuscle),
                       style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.45),
                           fontSize: 11),
@@ -931,7 +931,7 @@ class _FilterSheet extends StatelessWidget {
                       children: kAllMuscles.map((m) {
                         final selected = selectedMuscle == m;
                         return _SheetChip(
-                          label: m,
+                          label: formatMuscleName(m),
                           selected: selected,
                           onTap: () =>
                               onMuscleSelected(selected ? null : m),

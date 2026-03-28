@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MuscleMapWidget extends StatefulWidget {
@@ -42,9 +43,8 @@ class _MuscleMapWidgetState extends State<MuscleMapWidget> {
   }
 
   Future<(String, String)> _loadAndColorSvgs() async {
-    final bundle = DefaultAssetBundle.of(context);
-    final frontRaw = await bundle.loadString(_frontAsset);
-    final backRaw = await bundle.loadString(_backAsset);
+    final frontRaw = await rootBundle.loadString(_frontAsset);
+    final backRaw = await rootBundle.loadString(_backAsset);
 
     String front = frontRaw;
     String back = backRaw;

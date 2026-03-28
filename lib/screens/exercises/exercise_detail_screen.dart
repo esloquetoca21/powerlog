@@ -350,9 +350,9 @@ class _InfoTab extends StatelessWidget {
           spacing: 8,
           runSpacing: 6,
           children: [
-            _MuscleChip(label: def.primaryMuscle, primary: true),
+            _MuscleChip(label: formatMuscleName(def.primaryMuscle), primary: true),
             for (final m in def.secondaryMuscles)
-              _MuscleChip(label: m, primary: false),
+              _MuscleChip(label: formatMuscleName(m), primary: false),
           ],
         ),
 

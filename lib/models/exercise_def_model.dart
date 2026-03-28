@@ -200,6 +200,13 @@ const List<String> kAllMuscles = [
   'varios',
 ];
 
+/// Formats a raw muscle id (e.g. "glúteo_medio") as a display label ("Glúteo medio").
+String formatMuscleName(String raw) {
+  if (raw.isEmpty) return raw;
+  final spaced = raw.replaceAll('_', ' ');
+  return spaced[0].toUpperCase() + spaced.substring(1);
+}
+
 const List<String> kAllEquipment = [
   'barra',
   'mancuernas',

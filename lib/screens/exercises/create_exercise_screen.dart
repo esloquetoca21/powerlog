@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/exercise_def_model.dart';
 import '../../models/exercise_model.dart';
+import '../../services/auth_service.dart';
+import '../../services/exercise_service.dart';
 import '../../widgets/primary_button.dart';
 
 // ---------------------------------------------------------------------------
@@ -137,8 +140,11 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
         .where((s) => s.isNotEmpty)
         .toList();
 
-    // TODO: replace placeholder uid with context.read<AuthService>().currentUser!.uid
-    const String placeholderUid = 'current_user_uid';
+    final uid = context.read<AuthService>().currentUser?.uid;
+    if (uid == null) {
+      setState(() => _saving = false);
+      return;
+    }
 
     final def = ExerciseDef(
       id: widget.exerciseDef?.id ?? const Uuid().v4(),
@@ -158,13 +164,12 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
           : _videoUrlCtrl.text.trim(),
       cues: cues,
       isCustom: true,
-      createdBy: widget.exerciseDef?.createdBy ?? placeholderUid,
+      createdBy: widget.exerciseDef?.createdBy ?? uid,
       timestamp: widget.exerciseDef?.timestamp ??
           DateTime.now().toIso8601String(),
     );
 
-    // TODO: call ExerciseService.saveExercise(def) when service is available
-    await Future.delayed(const Duration(milliseconds: 300));
+    await context.read<ExerciseService>().saveCustomExercise(def, uid);
 
     if (!mounted) return;
     setState(() => _saving = false);
