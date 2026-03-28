@@ -305,20 +305,35 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
         Navigator.pop(ctx);
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Radio<String>(
-              value: value,
-              groupValue: _sortOrder,
-              activeColor: const Color(0xFFE53935),
-              onChanged: (v) {
-                if (v != null) {
-                  setState(() => _sortOrder = v);
-                  Navigator.pop(ctx);
-                }
-              },
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: selected
+                      ? const Color(0xFFE53935)
+                      : Colors.white38,
+                  width: 2,
+                ),
+              ),
+              child: selected
+                  ? Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFFE53935),
+                        ),
+                      ),
+                    )
+                  : null,
             ),
+            const SizedBox(width: 12),
             Text(label,
                 style: TextStyle(
                     color: selected ? Colors.white : Colors.white70,
@@ -737,7 +752,6 @@ class _ExerciseListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Stub favorite state — replace with ExercisePref lookup via service
-    final bool isFavorite = false;
 
     return GestureDetector(
       onTap: () {
@@ -831,10 +845,8 @@ class _ExerciseListTile extends StatelessWidget {
                     ),
                   ),
                 Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite
-                      ? const Color(0xFFE53935)
-                      : Colors.white.withValues(alpha: 0.3),
+                  Icons.favorite_border,
+                  color: Colors.white.withValues(alpha: 0.3),
                   size: 20,
                 ),
               ],
