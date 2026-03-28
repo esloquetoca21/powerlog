@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 460">
+  <!-- Body silhouette base -->
+  <g id="body_silhouette">
+    <!-- Head -->
+    <circle cx="100" cy="38" r="24" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1.2"/>
+    <!-- Neck -->
+    <rect x="92" y="60" width="16" height="18" rx="3" fill="#1A1A1A"/>
+    <!-- Torso -->
+    <path d="M58,78 Q48,85 44,100 L42,180 Q42,195 48,205 L50,238 Q54,248 60,252 L68,268 L132,268 L140,252 Q146,248 150,238 L152,205 Q158,195 158,180 L156,100 Q152,85 142,78 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1.2"/>
+    <!-- Left upper arm -->
+    <path d="M58,82 Q42,88 36,105 L33,145 Q32,158 36,170 L40,178 L56,168 L58,130 L60,90 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right upper arm -->
+    <path d="M142,82 Q158,88 164,105 L167,145 Q168,158 164,170 L160,178 L144,168 L142,130 L140,90 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Left forearm -->
+    <path d="M34,178 L38,178 L52,172 L58,180 L56,232 Q54,248 50,258 L44,265 L36,262 Q30,254 30,244 L30,210 Q30,192 34,178 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right forearm -->
+    <path d="M166,178 L162,178 L148,172 L142,180 L144,232 Q146,248 150,258 L156,265 L164,262 Q170,254 170,244 L170,210 Q170,192 166,178 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Left hand -->
+    <ellipse cx="43" cy="272" rx="9" ry="11" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right hand -->
+    <ellipse cx="157" cy="272" rx="9" ry="11" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Hips -->
+    <path d="M60,252 L58,268 L68,280 L94,284 L106,284 L132,280 L142,268 L140,252 Q100,262 60,252 Z" fill="#1A1A1A"/>
+    <!-- Left upper leg -->
+    <path d="M68,280 L58,268 L54,320 L56,358 L64,362 L78,360 L84,330 L88,284 L94,284 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right upper leg -->
+    <path d="M132,280 L142,268 L146,320 L144,358 L136,362 L122,360 L116,330 L112,284 L106,284 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Left lower leg -->
+    <path d="M56,360 L62,362 L78,360 L80,395 Q80,420 76,436 L68,440 L60,436 Q56,420 56,395 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right lower leg -->
+    <path d="M144,360 L138,362 L122,360 L120,395 Q120,420 124,436 L132,440 L140,436 Q144,420 144,395 Z" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Left foot -->
+    <ellipse cx="68" cy="443" rx="11" ry="6" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+    <!-- Right foot -->
+    <ellipse cx="132" cy="443" rx="11" ry="6" fill="#1A1A1A" stroke="#3A3A3A" stroke-width="1"/>
+  </g>
+
+  <!-- TFL (Tensor Fasciae Latae) - outer hip area, both sides -->
+  <g id="TFL">
+    <ellipse cx="60" cy="265" rx="8" ry="10" fill="#2C2C2C"/>
+    <ellipse cx="140" cy="265" rx="8" ry="10" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Deltoides Anterior - front shoulder, both sides -->
+  <g id="deltoides_anterior">
+    <ellipse cx="54" cy="96" rx="10" ry="14" fill="#2C2C2C"/>
+    <ellipse cx="146" cy="96" rx="10" ry="14" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Pectoral Superior - upper chest region -->
+  <path id="pectoral_superior" d="M68,90 Q84,84 100,86 Q116,84 132,90 L130,110 Q116,102 100,104 Q84,102 70,110 Z" fill="#2C2C2C"/>
+
+  <!-- Pectoral Inferior - lower chest region -->
+  <path id="pectoral_inferior" d="M70,110 Q84,102 100,104 Q116,102 130,110 L128,132 Q112,122 100,124 Q88,122 72,132 Z" fill="#2C2C2C"/>
+
+  <!-- Pectoral - overall chest (visual group reference, transparent overlay) -->
+  <g id="pectoral">
+    <path d="M68,90 Q84,84 100,86 Q116,84 132,90 L128,132 Q112,122 100,124 Q88,122 72,132 Z" fill="none"/>
+  </g>
+
+  <!-- Biceps - front upper arm, both sides -->
+  <g id="bíceps">
+    <ellipse cx="45" cy="128" rx="9" ry="20" fill="#2C2C2C"/>
+    <ellipse cx="155" cy="128" rx="9" ry="20" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Braquial - lower front upper arm, both sides -->
+  <g id="braquial">
+    <ellipse cx="45" cy="158" rx="8" ry="11" fill="#2C2C2C"/>
+    <ellipse cx="155" cy="158" rx="8" ry="11" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Braquiorradial - outer forearm, both sides -->
+  <g id="braquiorradial">
+    <ellipse cx="40" cy="194" rx="7" ry="14" fill="#2C2C2C"/>
+    <ellipse cx="160" cy="194" rx="7" ry="14" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Antebrazos - forearm front, both sides -->
+  <g id="antebrazos">
+    <ellipse cx="43" cy="224" rx="8" ry="16" fill="#2C2C2C"/>
+    <ellipse cx="157" cy="224" rx="8" ry="16" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Recto Abdominal - vertical ab region, center -->
+  <path id="recto_abdominal" d="M87,136 Q93,130 100,130 Q107,130 113,136 L113,228 Q107,234 100,234 Q93,234 87,228 Z" fill="#2C2C2C"/>
+
+  <!-- Core - overlapping abs region -->
+  <path id="core" d="M82,152 Q92,144 100,144 Q108,144 118,152 L118,218 Q108,226 100,226 Q92,226 82,218 Z" fill="#2C2C2C"/>
+
+  <!-- Oblicuos - sides of abdomen, both sides -->
+  <g id="oblicuos">
+    <path d="M68,130 L82,136 L82,228 L68,234 Q62,218 62,196 L62,162 Q62,144 68,130 Z" fill="#2C2C2C"/>
+    <path d="M132,130 L118,136 L118,228 L132,234 Q138,218 138,196 L138,162 Q138,144 132,130 Z" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Cuadriceps - front thigh, both sides -->
+  <g id="cuádriceps">
+    <path d="M62,290 L88,288 L87,354 L78,360 L62,356 L57,330 L57,310 Z" fill="#2C2C2C"/>
+    <path d="M138,290 L112,288 L113,354 L122,360 L138,356 L143,330 L143,310 Z" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Aductores - inner thigh, both sides -->
+  <g id="aductores">
+    <path d="M88,288 L96,286 L96,352 L88,354 Z" fill="#2C2C2C"/>
+    <path d="M112,288 L104,286 L104,352 L112,354 Z" fill="#2C2C2C"/>
+  </g>
+
+  <!-- Tibial Anterior - front of lower leg, both sides -->
+  <g id="tibial_anterior">
+    <path d="M60,366 L72,363 L76,398 L74,430 L65,432 L60,398 Z" fill="#2C2C2C"/>
+    <path d="M140,366 L128,363 L124,398 L126,430 L135,432 L140,398 Z" fill="#2C2C2C"/>
+  </g>
+</svg>
