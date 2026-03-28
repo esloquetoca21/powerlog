@@ -57,8 +57,13 @@ try {
 }
 
 if (!Array.isArray(exercises)) {
-  console.error('❌  JSON root must be an array of exercise objects.');
-  process.exit(1);
+  // Support { "exercises": [...], "metadata": {...} } wrapper format
+  if (exercises && Array.isArray(exercises.exercises)) {
+    exercises = exercises.exercises;
+  } else {
+    console.error('❌  JSON root must be an array or an object with an "exercises" array.');
+    process.exit(1);
+  }
 }
 
 console.log(`📦  Found ${exercises.length} exercises to import.`);
