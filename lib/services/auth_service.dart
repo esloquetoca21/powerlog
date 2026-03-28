@@ -170,6 +170,19 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _auth.sendPasswordResetEmail(email: email.trim());
+  }
+
+  Future<void> deleteAccount() async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return;
+    await _auth.currentUser!.delete();
+    await _db.collection('users').doc(uid).delete();
+    _currentUser = null;
+    notifyListeners();
+  }
+
   // ── Sign out ──────────────────────────────────────────────────────────────
 
   Future<void> signOut() async {

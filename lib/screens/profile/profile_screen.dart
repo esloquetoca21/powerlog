@@ -7,6 +7,7 @@ import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/primary_button.dart';
 import '../auth/login_screen.dart';
+import '../settings/settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -293,6 +294,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (!_editing) ...[
               _SectionTitle('Cuenta'),
               const SizedBox(height: 12),
+              _ActionRow(
+                icon: Icons.settings_outlined,
+                label: 'Ajustes',
+                color: Colors.white,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const SettingsScreen()),
+                ),
+              ),
+              const SizedBox(height: 8),
               _ActionRow(
                 icon: Icons.logout,
                 label: 'Cerrar sesión',
