@@ -123,11 +123,11 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
     if (result != null && mounted) {
       final uid = _uid;
+      final svc = context.read<ExerciseService>();
       if (uid != null) {
-        await context.read<ExerciseService>().saveCustomExercise(result, uid);
+        await svc.saveCustomExercise(result, uid);
       }
-      // Pop back to library — the library will reload
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     }
   }
 
@@ -320,12 +320,12 @@ class _InfoTab extends StatelessWidget {
         const SizedBox(height: 8),
 
         // Color legend
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _Legend(color: const Color(0xFFE74C3C), label: 'Primario'),
-            const SizedBox(width: 16),
-            _Legend(color: const Color(0xFFE67E22), label: 'Secundario'),
+            _Legend(color: Color(0xFFE74C3C), label: 'Primario'),
+            SizedBox(width: 16),
+            _Legend(color: Color(0xFFE67E22), label: 'Secundario'),
           ],
         ),
 
@@ -333,7 +333,7 @@ class _InfoTab extends StatelessWidget {
 
         // Description
         if (def.description != null && def.description!.isNotEmpty) ...[
-          _SectionHeader('Descripción'),
+          const _SectionHeader('Descripción'),
           const SizedBox(height: 8),
           Text(
             def.description!,
@@ -344,7 +344,7 @@ class _InfoTab extends StatelessWidget {
         ],
 
         // Muscle chips
-        _SectionHeader('Músculos'),
+        const _SectionHeader('Músculos'),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -360,7 +360,7 @@ class _InfoTab extends StatelessWidget {
 
         // Equipment & Disciplines
         if (def.equipment.isNotEmpty) ...[
-          _SectionHeader('Equipamiento'),
+          const _SectionHeader('Equipamiento'),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -373,7 +373,7 @@ class _InfoTab extends StatelessWidget {
         ],
 
         if (def.disciplines.isNotEmpty) ...[
-          _SectionHeader('Disciplinas'),
+          const _SectionHeader('Disciplinas'),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -387,7 +387,7 @@ class _InfoTab extends StatelessWidget {
 
         // Instructions
         if (def.instructions.isNotEmpty) ...[
-          _SectionHeader('Ejecución'),
+          const _SectionHeader('Ejecución'),
           const SizedBox(height: 10),
           for (int i = 0; i < def.instructions.length; i++)
             _InstructionRow(number: i + 1, text: def.instructions[i]),
@@ -396,7 +396,7 @@ class _InfoTab extends StatelessWidget {
 
         // Cues
         if (def.cues.isNotEmpty) ...[
-          _SectionHeader('Cues técnicos'),
+          const _SectionHeader('Cues técnicos'),
           const SizedBox(height: 8),
           for (final cue in def.cues)
             Padding(
@@ -421,7 +421,7 @@ class _InfoTab extends StatelessWidget {
 
         // RPE table
         if (def.recommendedRpe.isNotEmpty) ...[
-          _SectionHeader('RPE recomendado'),
+          const _SectionHeader('RPE recomendado'),
           const SizedBox(height: 10),
           Container(
             decoration: BoxDecoration(
@@ -444,7 +444,7 @@ class _InfoTab extends StatelessWidget {
 
         // Tags
         if (def.tags.isNotEmpty) ...[
-          _SectionHeader('Etiquetas'),
+          const _SectionHeader('Etiquetas'),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -660,7 +660,7 @@ class _StatsTabState extends State<_StatsTab> {
   String _fmtVolume(int v) {
     if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)} Mt';
     if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)} t';
-    return '${v} kg';
+    return '$v kg';
   }
 
   @override
@@ -714,7 +714,7 @@ class _StatsTabState extends State<_StatsTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Records ───────────────────────────────────────────────────
-              _StatsSectionHeader('Récords personales'),
+              const _StatsSectionHeader('Récords personales'),
               const SizedBox(height: 12),
               // 1RM estimado (featured)
               Container(
@@ -814,7 +814,7 @@ class _StatsTabState extends State<_StatsTab> {
               const SizedBox(height: 28),
 
               // ── Strength curve ────────────────────────────────────────────
-              _StatsSectionHeader('Curva fuerza-resistencia'),
+              const _StatsSectionHeader('Curva fuerza-resistencia'),
               const SizedBox(height: 12),
               Container(
                 decoration: BoxDecoration(
@@ -908,7 +908,7 @@ class _StatsTabState extends State<_StatsTab> {
               const SizedBox(height: 28),
 
               // ── 1RM progress chart ────────────────────────────────────────
-              _StatsSectionHeader('Progreso 1RM estimado'),
+              const _StatsSectionHeader('Progreso 1RM estimado'),
               const SizedBox(height: 12),
               // Period selector
               Row(
@@ -966,7 +966,7 @@ class _StatsTabState extends State<_StatsTab> {
 
               // ── Best session ──────────────────────────────────────────────
               if (stats.bestVolumeSession != null) ...[
-                _StatsSectionHeader('Mejor sesión histórica'),
+                const _StatsSectionHeader('Mejor sesión histórica'),
                 const SizedBox(height: 12),
                 _BestSessionCard(
                   session: stats.bestVolumeSession!,
@@ -1261,7 +1261,7 @@ class _BestSessionCardState extends State<_BestSessionCard> {
 
   String _fmtVolume(int v) {
     if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)} t';
-    return '${v} kg';
+    return '$v kg';
   }
 
   @override
@@ -1796,39 +1796,6 @@ class _YoutubePlayerScreenState extends State<_YoutubePlayerScreen> {
           elevation: 0,
         ),
         body: Center(child: player),
-      ),
-    );
-  }
-}
-
-// ── Tab placeholder ──────────────────────────────────────────────────────────
-
-class _PlaceholderTab extends StatelessWidget {
-  final String label;
-
-  const _PlaceholderTab({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.construction_outlined,
-              size: 48, color: Colors.white.withValues(alpha: 0.2)),
-          const SizedBox(height: 12),
-          Text(
-            'Próximamente',
-            style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.35), fontSize: 16),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.2), fontSize: 13),
-          ),
-        ],
       ),
     );
   }

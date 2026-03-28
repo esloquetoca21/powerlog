@@ -298,18 +298,34 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   }
 
   Widget _sortRadioTile(BuildContext ctx, String value, String label) {
-    return RadioListTile<String>(
-      title: Text(label,
-          style: const TextStyle(color: Colors.white, fontSize: 14)),
-      value: value,
-      groupValue: _sortOrder,
-      activeColor: const Color(0xFFE53935),
-      onChanged: (v) {
-        if (v != null) {
-          setState(() => _sortOrder = v);
-          Navigator.pop(ctx);
-        }
+    final selected = _sortOrder == value;
+    return InkWell(
+      onTap: () {
+        setState(() => _sortOrder = value);
+        Navigator.pop(ctx);
       },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: Row(
+          children: [
+            Radio<String>(
+              value: value,
+              groupValue: _sortOrder,
+              activeColor: const Color(0xFFE53935),
+              onChanged: (v) {
+                if (v != null) {
+                  setState(() => _sortOrder = v);
+                  Navigator.pop(ctx);
+                }
+              },
+            ),
+            Text(label,
+                style: TextStyle(
+                    color: selected ? Colors.white : Colors.white70,
+                    fontSize: 14)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -721,7 +737,7 @@ class _ExerciseListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Stub favorite state — replace with ExercisePref lookup via service
-    const bool isFavorite = false;
+    final bool isFavorite = false;
 
     return GestureDetector(
       onTap: () {

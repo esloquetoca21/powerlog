@@ -149,15 +149,17 @@ class ExerciseService extends ChangeNotifier {
       if (category != null && ex.category != category) return false;
 
       // Primary muscle filter
-      if (primaryMuscle != null && ex.primaryMuscle != primaryMuscle)
+      if (primaryMuscle != null && ex.primaryMuscle != primaryMuscle) {
         return false;
+      }
 
       // Equipment filter
       if (equipment != null && !ex.equipment.contains(equipment)) return false;
 
       // Discipline filter
-      if (discipline != null && !ex.disciplines.contains(discipline))
+      if (discipline != null && !ex.disciplines.contains(discipline)) {
         return false;
+      }
 
       // Difficulty filter
       if (difficulty != null && ex.difficulty != difficulty) return false;

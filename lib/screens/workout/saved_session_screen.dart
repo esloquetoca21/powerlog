@@ -1123,6 +1123,10 @@ class _AddExerciseSheetEditState extends State<_AddExerciseSheetEdit> {
         ExerciseCategory.squat => 'Sentadilla',
         ExerciseCategory.bench => 'Banca',
         ExerciseCategory.deadlift => 'Peso muerto',
+        ExerciseCategory.row => 'Remo',
+        ExerciseCategory.overhead => 'Press OHP',
+        ExerciseCategory.olympic => 'Olímpico',
+        ExerciseCategory.carry => 'Acarreo',
         ExerciseCategory.accessory => 'Accesorio',
       };
 

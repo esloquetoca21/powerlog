@@ -81,8 +81,8 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
     _nameCtrl.dispose();
     _descriptionCtrl.dispose();
     _videoUrlCtrl.dispose();
-    for (final c in _instructionCtrls) c.dispose();
-    for (final c in _cueCtrls) c.dispose();
+    for (final c in _instructionCtrls) { c.dispose(); }
+    for (final c in _cueCtrls) { c.dispose(); }
     super.dispose();
   }
 

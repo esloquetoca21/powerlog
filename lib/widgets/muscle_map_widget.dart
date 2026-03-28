@@ -23,7 +23,6 @@ class _MuscleMapWidgetState extends State<MuscleMapWidget> {
 
   static const String _primaryColor = '#E74C3C';
   static const String _secondaryColor = '#E67E22';
-  static const String _neutralColor = '#2C2C2C';
 
   Future<(String, String)>? _svgFuture;
 
@@ -178,7 +177,7 @@ class _SvgView extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.45),
+            color: Colors.white.withValues(alpha: 0.45),
             fontSize: 10,
             letterSpacing: 0.5,
           ),
