@@ -5,8 +5,11 @@ import 'package:provider/provider.dart';
 
 import '../../models/exercise_def_model.dart';
 import '../../models/exercise_pref_model.dart';
+import '../../models/session_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/exercise_service.dart';
+import '../../services/exercise_stats_service.dart';
+import '../../services/session_service.dart';
 import '../../widgets/muscle_map_widget.dart';
 import 'create_exercise_screen.dart';
 
@@ -245,7 +248,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         body: TabBarView(
           children: [
             _InfoTab(def: def),
-            const _PlaceholderTab(label: 'Estadísticas'),
+            _StatsTab(def: def),
             _NotesTab(pref: _pref, def: def, onPrefUpdated: (p) {
               if (mounted) setState(() => _pref = p);
             }),
@@ -594,6 +597,776 @@ class _NotesTabState extends State<_NotesTab> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Tab Estadísticas ─────────────────────────────────────────────────────────
+
+class _StatsTab extends StatefulWidget {
+  final ExerciseDef def;
+
+  const _StatsTab({required this.def});
+
+  @override
+  State<_StatsTab> createState() => _StatsTabState();
+}
+
+class _StatsTabState extends State<_StatsTab> {
+  String _period = 'todo';
+  late Future<ExerciseStats> _statsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _statsFuture = _loadStats();
+  }
+
+  Future<ExerciseStats> _loadStats() async {
+    final sessions = context.read<SessionService>().sessions;
+    final svc = ExerciseStatsService();
+    // Two-pass: first to get maxEstimated1RM for RPE % calculation
+    final first = svc.calculate(widget.def.name, sessions, 0);
+    if (first.totalSets == 0) return first;
+    return svc.calculate(widget.def.name, sessions, first.maxEstimated1RM);
+  }
+
+  List<({DateTime date, double value})> _filtered(
+      List<({DateTime date, double value})> history) {
+    if (_period == 'todo' || history.isEmpty) return history;
+    final now = DateTime.now();
+    final cutoff = switch (_period) {
+      '1M' => now.subtract(const Duration(days: 30)),
+      '3M' => now.subtract(const Duration(days: 90)),
+      '6M' => now.subtract(const Duration(days: 180)),
+      '1A' => now.subtract(const Duration(days: 365)),
+      _ => DateTime(2000),
+    };
+    return history.where((p) => p.date.isAfter(cutoff)).toList();
+  }
+
+  String _fmtDate(DateTime d) {
+    const m = [
+      '', 'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+      'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+    ];
+    return '${d.day} ${m[d.month]} ${d.year}';
+  }
+
+  String _fmtVolume(int v) {
+    if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)} Mt';
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)} t';
+    return '${v} kg';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ExerciseStats>(
+      future: _statsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(
+            child: CircularProgressIndicator(
+                color: Color(0xFFE53935), strokeWidth: 2),
+          );
+        }
+
+        final stats = snapshot.data!;
+
+        if (stats.totalSets == 0) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.bar_chart_outlined,
+                    size: 52, color: Colors.white.withValues(alpha: 0.15)),
+                const SizedBox(height: 16),
+                const Text('Sin datos todavía',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    'Empieza a registrar este ejercicio para ver tus estadísticas.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.4),
+                        height: 1.5),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final filteredHistory = _filtered(stats.estimated1rmHistory);
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Records ───────────────────────────────────────────────────
+              _StatsSectionHeader('Récords personales'),
+              const SizedBox(height: 12),
+              // 1RM estimado (featured)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE53935).withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: const Color(0xFFE53935).withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.emoji_events_outlined,
+                        color: Color(0xFFE53935), size: 22),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${stats.maxEstimated1RM.toStringAsFixed(1)} kg',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text('1RM estimado máximo (Epley)',
+                            style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.45),
+                                fontSize: 12)),
+                      ],
+                    ),
+                    if (stats.prDate != null) ...[
+                      const Spacer(),
+                      Text(
+                        _fmtDate(stats.prDate!),
+                        style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.35),
+                            fontSize: 11),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              // PR, max reps, volume row
+              Row(
+                children: [
+                  _StatMiniCard(
+                    label: 'Récord personal',
+                    value: stats.personalRecord != null
+                        ? '${stats.personalRecord!.weight.toStringAsFixed(1)} kg'
+                        : '—',
+                    sub: stats.personalRecord != null
+                        ? '× ${stats.personalRecord!.reps} reps'
+                        : '',
+                  ),
+                  const SizedBox(width: 8),
+                  _StatMiniCard(
+                    label: 'Máx. reps',
+                    value: stats.allSets.isEmpty
+                        ? '—'
+                        : () {
+                            final maxRep = stats.allSets
+                                .reduce((a, b) => a.reps > b.reps ? a : b);
+                            return '${maxRep.reps} reps';
+                          }(),
+                    sub: stats.allSets.isEmpty
+                        ? ''
+                        : () {
+                            final maxRep = stats.allSets
+                                .reduce((a, b) => a.reps > b.reps ? a : b);
+                            return '${maxRep.weight.toStringAsFixed(1)} kg';
+                          }(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  _StatMiniCard(
+                    label: 'Volumen total',
+                    value: _fmtVolume(stats.totalVolume),
+                    sub: '${stats.totalSets} series',
+                  ),
+                  const SizedBox(width: 8),
+                  _StatMiniCard(
+                    label: 'Última vez',
+                    value: stats.lastPerformed != null
+                        ? _fmtDate(stats.lastPerformed!)
+                        : '—',
+                    sub: '',
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 28),
+
+              // ── Strength curve ────────────────────────────────────────────
+              _StatsSectionHeader('Curva fuerza-resistencia'),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    // Header row
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text('Repeticiones',
+                                style: TextStyle(
+                                    color:
+                                        Colors.white.withValues(alpha: 0.4),
+                                    fontSize: 12)),
+                          ),
+                          Text('Mejor peso',
+                              style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.4),
+                                  fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1, color: Colors.white10),
+                    ...() {
+                      const repLabels = [
+                        (reps: 1, label: '1RM est.'),
+                        (reps: 2, label: '2RM'),
+                        (reps: 3, label: '3RM'),
+                        (reps: 5, label: '5RM'),
+                        (reps: 8, label: '8RM'),
+                        (reps: 10, label: '10RM'),
+                        (reps: 15, label: '15RM'),
+                        (reps: 20, label: '20RM'),
+                      ];
+                      return repLabels.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final item = entry.value;
+                        final weight = item.reps == 1
+                            ? (stats.maxEstimated1RM > 0
+                                ? stats.maxEstimated1RM
+                                : null)
+                            : stats.strengthCurve[item.reps];
+                        final last = i == repLabels.length - 1;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 11),
+                          decoration: BoxDecoration(
+                            border: last
+                                ? null
+                                : const Border(
+                                    bottom: BorderSide(
+                                        color: Colors.white10)),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(item.label,
+                                    style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14)),
+                              ),
+                              Text(
+                                weight != null
+                                    ? '${weight.toStringAsFixed(1)} kg'
+                                    : '—',
+                                style: TextStyle(
+                                  color: weight != null
+                                      ? const Color(0xFFE53935)
+                                      : Colors.white.withValues(alpha: 0.25),
+                                  fontWeight: weight != null
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    }(),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 28),
+
+              // ── 1RM progress chart ────────────────────────────────────────
+              _StatsSectionHeader('Progreso 1RM estimado'),
+              const SizedBox(height: 12),
+              // Period selector
+              Row(
+                children: ['1M', '3M', '6M', '1A', 'Todo'].map((p) {
+                  final sel = p == _period;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: GestureDetector(
+                      onTap: () => setState(() => _period = p),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: sel
+                              ? const Color(0xFFE53935)
+                              : Colors.white.withValues(alpha: 0.07),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(p,
+                            style: TextStyle(
+                              color: sel
+                                  ? Colors.white
+                                  : Colors.white.withValues(alpha: 0.5),
+                              fontSize: 12,
+                              fontWeight: sel
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                            )),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 12),
+              if (filteredHistory.length < 2)
+                Container(
+                  height: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A1A),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'No hay suficientes datos para este período.',
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        fontSize: 13),
+                  ),
+                )
+              else
+                _Stats1rmChart(history: filteredHistory),
+
+              const SizedBox(height: 28),
+
+              // ── Best session ──────────────────────────────────────────────
+              if (stats.bestVolumeSession != null) ...[
+                _StatsSectionHeader('Mejor sesión histórica'),
+                const SizedBox(height: 12),
+                _BestSessionCard(
+                  session: stats.bestVolumeSession!,
+                  exerciseName: widget.def.name,
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ── Stats helpers ─────────────────────────────────────────────────────────────
+
+class _StatsSectionHeader extends StatelessWidget {
+  final String text;
+
+  const _StatsSectionHeader(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2),
+    );
+  }
+}
+
+class _StatMiniCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String sub;
+
+  const _StatMiniCard({
+    required this.label,
+    required this.value,
+    required this.sub,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label,
+                style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.4),
+                    fontSize: 11)),
+            const SizedBox(height: 6),
+            Text(value,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
+            if (sub.isNotEmpty)
+              Text(sub,
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.4),
+                      fontSize: 11)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── 1RM line chart ────────────────────────────────────────────────────────────
+
+class _Stats1rmChart extends StatelessWidget {
+  final List<({DateTime date, double value})> history;
+
+  const _Stats1rmChart({required this.history});
+
+  @override
+  Widget build(BuildContext context) {
+    // Compute which entries are PRs (running maximum)
+    final prFlags = <bool>[];
+    double runMax = 0;
+    for (final h in history) {
+      if (h.value > runMax) {
+        runMax = h.value;
+        prFlags.add(true);
+      } else {
+        prFlags.add(false);
+      }
+    }
+
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      padding: const EdgeInsets.fromLTRB(12, 16, 16, 12),
+      child: CustomPaint(
+        painter: _Stats1rmPainter(history: history, prFlags: prFlags),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _Stats1rmPainter extends CustomPainter {
+  final List<({DateTime date, double value})> history;
+  final List<bool> prFlags;
+
+  _Stats1rmPainter({required this.history, required this.prFlags});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (history.length < 2) return;
+
+    const padLeft = 44.0;
+    const padBottom = 28.0;
+    const padTop = 8.0;
+    const padRight = 8.0;
+
+    final chartW = size.width - padLeft - padRight;
+    final chartH = size.height - padTop - padBottom;
+
+    final minV =
+        history.map((p) => p.value).reduce((a, b) => a < b ? a : b);
+    final maxV =
+        history.map((p) => p.value).reduce((a, b) => a > b ? a : b);
+    final rangeV = (maxV - minV).clamp(1.0, double.infinity);
+
+    final minT =
+        history.first.date.millisecondsSinceEpoch.toDouble();
+    final maxT =
+        history.last.date.millisecondsSinceEpoch.toDouble();
+    final rangeT = (maxT - minT).clamp(1.0, double.infinity);
+
+    Offset toCanvas(({DateTime date, double value}) p) {
+      final x =
+          padLeft + (p.date.millisecondsSinceEpoch - minT) / rangeT * chartW;
+      final y = padTop + (1 - (p.value - minV) / rangeV) * chartH;
+      return Offset(x, y);
+    }
+
+    // Grid
+    final gridPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.05)
+      ..strokeWidth = 1;
+    for (int i = 0; i <= 3; i++) {
+      final y = padTop + chartH * i / 3;
+      canvas.drawLine(
+          Offset(padLeft, y), Offset(padLeft + chartW, y), gridPaint);
+    }
+
+    // Y labels
+    final labelStyle = TextStyle(
+        color: Colors.white.withValues(alpha: 0.35), fontSize: 10);
+    for (int i = 0; i <= 3; i++) {
+      final val = maxV - (rangeV * i / 3);
+      final y = padTop + chartH * i / 3;
+      _drawText(canvas, val.toStringAsFixed(0), Offset(0, y - 6), 42,
+          labelStyle, TextAlign.right);
+    }
+
+    // Gradient fill
+    final fillPath = Path();
+    fillPath.moveTo(padLeft, padTop + chartH);
+    for (final p in history) {
+      fillPath.lineTo(toCanvas(p).dx, toCanvas(p).dy);
+    }
+    fillPath.lineTo(toCanvas(history.last).dx, padTop + chartH);
+    fillPath.close();
+    canvas.drawPath(
+      fillPath,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFFE53935).withValues(alpha: 0.18),
+            const Color(0xFFE53935).withValues(alpha: 0.0),
+          ],
+        ).createShader(Rect.fromLTWH(padLeft, padTop, chartW, chartH)),
+    );
+
+    // Line
+    final path = Path();
+    for (int i = 0; i < history.length; i++) {
+      final pt = toCanvas(history[i]);
+      if (i == 0) {
+        path.moveTo(pt.dx, pt.dy);
+      } else {
+        path.lineTo(pt.dx, pt.dy);
+      }
+    }
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = const Color(0xFFE53935)
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+
+    // Dots — gold for PRs, red for regular
+    final dotBg = Paint()..color = const Color(0xFF1A1A1A);
+    for (int i = 0; i < history.length; i++) {
+      final pt = toCanvas(history[i]);
+      final isPr = prFlags[i];
+      final dotColor =
+          isPr ? const Color(0xFFFFD600) : const Color(0xFFE53935);
+      canvas.drawCircle(pt, 5, dotBg);
+      canvas.drawCircle(pt, isPr ? 4 : 3, Paint()..color = dotColor);
+    }
+
+    // X axis labels (first and last)
+    _drawText(
+      canvas,
+      _shortDate(history.first.date),
+      Offset(padLeft, size.height - padBottom + 6),
+      50,
+      labelStyle,
+      TextAlign.left,
+    );
+    _drawText(
+      canvas,
+      _shortDate(history.last.date),
+      Offset(size.width - padRight - 46, size.height - padBottom + 6),
+      50,
+      labelStyle,
+      TextAlign.right,
+    );
+  }
+
+  void _drawText(Canvas canvas, String text, Offset offset, double width,
+      TextStyle style, TextAlign align) {
+    final tp = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      textAlign: align,
+    )..layout(maxWidth: width);
+    tp.paint(canvas, offset);
+  }
+
+  String _shortDate(DateTime d) {
+    const months = [
+      '', 'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+      'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+    ];
+    return '${d.day} ${months[d.month]}';
+  }
+
+  @override
+  bool shouldRepaint(_Stats1rmPainter old) =>
+      old.history != history || old.prFlags != prFlags;
+}
+
+// ── Best session card ─────────────────────────────────────────────────────────
+
+class _BestSessionCard extends StatefulWidget {
+  final SessionModel session;
+  final String exerciseName;
+
+  const _BestSessionCard({
+    required this.session,
+    required this.exerciseName,
+  });
+
+  @override
+  State<_BestSessionCard> createState() => _BestSessionCardState();
+}
+
+class _BestSessionCardState extends State<_BestSessionCard> {
+  bool _expanded = false;
+
+  String _fmtDate(DateTime d) {
+    const m = [
+      '', 'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+      'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+    ];
+    return '${d.day} ${m[d.month]} ${d.year}';
+  }
+
+  String _fmtVolume(int v) {
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)} t';
+    return '${v} kg';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final session = widget.session;
+    final exercise = session.exercises.firstWhere(
+      (e) => e.name.toLowerCase() == widget.exerciseName.toLowerCase(),
+      orElse: () => session.exercises.first,
+    );
+    final volume =
+        exercise.sets.fold<int>(0, (s, e) => s + (e.weight * e.reps).round());
+
+    return GestureDetector(
+      onTap: () => setState(() => _expanded = !_expanded),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  const Icon(Icons.workspace_premium_outlined,
+                      color: Color(0xFFE53935), size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(session.title,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600)),
+                        Text(
+                          '${_fmtDate(session.date)}  ·  ${_fmtVolume(volume)} de volumen',
+                          style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.4),
+                              fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    _expanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: Colors.white38,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+            // Expanded series list
+            if (_expanded) ...[
+              const Divider(height: 1, color: Colors.white10),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
+                child: Column(
+                  children: exercise.sets.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final s = entry.value;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 22,
+                            height: 22,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color:
+                                  const Color(0xFFE53935).withValues(alpha: 0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text('${i + 1}',
+                                style: const TextStyle(
+                                    color: Color(0xFFE53935),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${s.weight.toStringAsFixed(1)} kg × ${s.reps} reps',
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 13),
+                          ),
+                          if (s.rpe != null) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              'RPE ${s.rpe!.toStringAsFixed(1)}',
+                              style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.35),
+                                  fontSize: 12),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
