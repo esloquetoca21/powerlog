@@ -166,7 +166,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               Text(
                 _formatDate(session.date),
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), fontSize: 13),
+                    color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
               ),
 
               const SizedBox(height: 20),
@@ -283,7 +283,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                 decoration: InputDecoration(
                   hintText: 'Cómo te has sentido, qué mejorar...',
                   hintStyle: TextStyle(
-                      color: Colors.white.withOpacity(0.3), fontSize: 14),
+                      color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
                   filled: true,
                   fillColor: const Color(0xFF1A1A1A),
                   border: OutlineInputBorder(
@@ -387,7 +387,7 @@ class _StatCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4), fontSize: 10),
+                  color: Colors.white.withValues(alpha: 0.4), fontSize: 10),
               textAlign: TextAlign.center,
             ),
           ],
@@ -435,10 +435,10 @@ class _BestLiftsSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE53935).withOpacity(0.08),
+                  color: const Color(0xFFE53935).withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: const Color(0xFFE53935).withOpacity(0.25)),
+                      color: const Color(0xFFE53935).withValues(alpha: 0.25)),
                 ),
                 child: Column(
                   children: [
@@ -454,7 +454,7 @@ class _BestLiftsSection extends StatelessWidget {
                     Text(
                       entry.key,
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.55),
+                          color: Colors.white.withValues(alpha: 0.55),
                           fontSize: 11),
                     ),
                   ],
@@ -506,7 +506,7 @@ class _ExerciseSummaryRow extends StatelessWidget {
                 Text(
                   '${exercise.sets.length} series · ${exercise.totalVolume} kg tonelaje',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.4), fontSize: 12),
+                      color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
                 ),
               ],
             ),
@@ -515,7 +515,7 @@ class _ExerciseSummaryRow extends StatelessWidget {
             Text(
               '${best.weight.toStringAsFixed(best.weight % 1 == 0 ? 0 : 1)} kg × ${best.reps}',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -542,7 +542,7 @@ class _AiInsightsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -565,7 +565,7 @@ class _AiInsightsCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE53935).withOpacity(0.12),
+                  color: const Color(0xFFE53935).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text(
@@ -588,14 +588,14 @@ class _AiInsightsCard extends StatelessWidget {
                   height: 14,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
                   'Analizando tu sesión...',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.4), fontSize: 13),
+                      color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
                 ),
               ],
             )
@@ -603,7 +603,7 @@ class _AiInsightsCard extends StatelessWidget {
             Text(
               insights!,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.75),
+                color: Colors.white.withValues(alpha: 0.75),
                 fontSize: 13,
                 height: 1.5,
               ),
@@ -612,7 +612,7 @@ class _AiInsightsCard extends StatelessWidget {
             Text(
               'Configura tu API key de Anthropic en ai_service.dart para obtener análisis personalizados de cada sesión.',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.35),
+                color: Colors.white.withValues(alpha: 0.35),
                 fontSize: 13,
                 height: 1.4,
               ),

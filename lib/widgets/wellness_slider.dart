@@ -45,7 +45,7 @@ class WellnessSlider extends StatelessWidget {
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE53935).withOpacity(0.15),
+                  color: const Color(0xFFE53935).withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -63,9 +63,9 @@ class WellnessSlider extends StatelessWidget {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: const Color(0xFFE53935),
-              inactiveTrackColor: Colors.white.withOpacity(0.1),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
               thumbColor: const Color(0xFFE53935),
-              overlayColor: const Color(0xFFE53935).withOpacity(0.15),
+              overlayColor: const Color(0xFFE53935).withValues(alpha: 0.15),
               trackHeight: 3,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
@@ -85,10 +85,10 @@ class WellnessSlider extends StatelessWidget {
               children: [
                 Text(leftLabel,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.35), fontSize: 10)),
+                        color: Colors.white.withValues(alpha: 0.35), fontSize: 10)),
                 Text(rightLabel,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.35), fontSize: 10)),
+                        color: Colors.white.withValues(alpha: 0.35), fontSize: 10)),
               ],
             ),
           ),
@@ -132,7 +132,7 @@ class WellnessRatingRow extends StatelessWidget {
                     Expanded(
                       child: Text(label,
                           style: TextStyle(
-                              color: Colors.white.withOpacity(0.75),
+                              color: Colors.white.withValues(alpha: 0.75),
                               fontSize: 12)),
                     ),
                     Text('$value/10',
@@ -150,7 +150,7 @@ class WellnessRatingRow extends StatelessWidget {
                         height: 3,
                         width: constraints.maxWidth,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
+                          color: Colors.white.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -171,11 +171,11 @@ class WellnessRatingRow extends StatelessWidget {
                   children: [
                     Text(leftLabel,
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.25),
+                            color: Colors.white.withValues(alpha: 0.25),
                             fontSize: 9)),
                     Text(rightLabel,
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.25),
+                            color: Colors.white.withValues(alpha: 0.25),
                             fontSize: 9)),
                   ],
                 ),

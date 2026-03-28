@@ -247,7 +247,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                   onPressed: _saving ? null : _cancelEdit,
                   child: Text('Cancelar',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.5))),
+                          color: Colors.white.withValues(alpha: 0.5))),
                 ),
                 TextButton(
                   onPressed: _saving ? null : _save,
@@ -287,7 +287,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
             Text(
               _formatDate(session.date),
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4), fontSize: 13),
+                  color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
             ),
             const SizedBox(height: 14),
             Row(
@@ -446,7 +446,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                     decoration: InputDecoration(
                       hintText: 'Sensaciones, técnica, ajustes...',
                       hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 14),
                       filled: true,
                       fillColor: const Color(0xFF1A1A1A),
@@ -471,13 +471,13 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                         ),
                         child: Text(session.notes!,
                             style: TextStyle(
-                                color: Colors.white.withOpacity(0.75),
+                                color: Colors.white.withValues(alpha: 0.75),
                                 fontSize: 14,
                                 height: 1.5)),
                       )
                     : Text('Sin notas',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.25),
+                            color: Colors.white.withValues(alpha: 0.25),
                             fontSize: 14)),
 
             // ── AI insights ───────────────────────────────────────────
@@ -492,7 +492,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                   color: const Color(0xFF1A1A1A),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: Colors.white.withOpacity(0.06)),
+                      color: Colors.white.withValues(alpha: 0.06)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -512,7 +512,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                     const SizedBox(height: 8),
                     Text(session.aiInsights!,
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 13,
                             height: 1.5)),
                   ],
@@ -574,7 +574,7 @@ class _StatChip extends StatelessWidget {
           const SizedBox(width: 5),
           Text(label,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.7), fontSize: 12)),
+                  color: Colors.white.withValues(alpha: 0.7), fontSize: 12)),
         ],
       ),
     );
@@ -595,13 +595,13 @@ class _MiniStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: (c ?? Colors.white).withOpacity(0.07),
+        color: (c ?? Colors.white).withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         label,
         style: TextStyle(
-            color: c ?? Colors.white.withOpacity(0.55),
+            color: c ?? Colors.white.withValues(alpha: 0.55),
             fontSize: 11,
             fontWeight: accent ? FontWeight.w600 : FontWeight.normal),
       ),
@@ -681,7 +681,7 @@ class _ExerciseBlock extends StatelessWidget {
                   IconButton(
                     onPressed: onRemoveExercise,
                     icon: Icon(Icons.close,
-                        color: Colors.white.withOpacity(0.3), size: 18),
+                        color: Colors.white.withValues(alpha: 0.3), size: 18),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
@@ -698,7 +698,7 @@ class _ExerciseBlock extends StatelessWidget {
                 runSpacing: 6,
                 children: [
                   _MiniStat(label: '${exercise.sets.length} series'),
-                  _MiniStat(label: '${volume} kg vol.'),
+                  _MiniStat(label: '$volume kg vol.'),
                   if (best1rm > 0)
                     _MiniStat(
                       label: '1RM ~${best1rm.toStringAsFixed(1)} kg',
@@ -724,21 +724,21 @@ class _ExerciseBlock extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.04),
+                  color: Colors.white.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: Colors.white.withOpacity(0.07)),
+                      color: Colors.white.withValues(alpha: 0.07)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.notes_outlined,
-                        color: Colors.white.withOpacity(0.3), size: 13),
+                        color: Colors.white.withValues(alpha: 0.3), size: 13),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(exercise.notes!,
                           style: TextStyle(
-                              color: Colors.white.withOpacity(0.55),
+                              color: Colors.white.withValues(alpha: 0.55),
                               fontSize: 12,
                               height: 1.4)),
                     ),
@@ -757,26 +757,26 @@ class _ExerciseBlock extends StatelessWidget {
                   width: 28,
                   child: Text('#',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 11)),
                 ),
                 Expanded(
                   child: Text('kg',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 11)),
                 ),
                 Expanded(
                   child: Text('reps',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 11)),
                 ),
                 SizedBox(
                   width: 60,
                   child: Text(hasRir ? 'RIR' : 'RPE',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 11)),
                 ),
                 if (editing) const SizedBox(width: 28),
@@ -807,7 +807,7 @@ class _ExerciseBlock extends StatelessWidget {
                     child: Text(
                       '↳ ${set.notes!}',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 11,
                           fontStyle: FontStyle.italic),
                     ),
@@ -825,12 +825,12 @@ class _ExerciseBlock extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.add,
-                        color: const Color(0xFFE53935).withOpacity(0.7),
+                        color: const Color(0xFFE53935).withValues(alpha: 0.7),
                         size: 16),
                     const SizedBox(width: 4),
                     Text('Añadir serie',
                         style: TextStyle(
-                            color: const Color(0xFFE53935).withOpacity(0.7),
+                            color: const Color(0xFFE53935).withValues(alpha: 0.7),
                             fontSize: 12)),
                   ],
                 ),
@@ -921,7 +921,7 @@ class _SetRowState extends State<_SetRow> {
                             horizontal: 3, vertical: 1),
                         decoration: BoxDecoration(
                           color: _setTypeColor(widget.set.setType)
-                              .withOpacity(0.15),
+                              .withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(3),
                         ),
                         child: Text(
@@ -939,7 +939,7 @@ class _SetRowState extends State<_SetRow> {
               width: 28,
               child: Text('${widget.set.setNumber}',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
                       fontSize: 13)),
             ),
             Expanded(
@@ -962,7 +962,7 @@ class _SetRowState extends State<_SetRow> {
                         ? 'RPE ${widget.set.rpe}'
                         : '—',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), fontSize: 12),
+                    color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
               ),
             ),
           ],
@@ -979,7 +979,7 @@ class _SetRowState extends State<_SetRow> {
             width: 28,
             child: Text('${widget.set.setNumber}',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), fontSize: 13)),
+                    color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
           ),
           Expanded(
             child: _InlineField(
@@ -1007,7 +1007,7 @@ class _SetRowState extends State<_SetRow> {
           GestureDetector(
             onTap: widget.onRemove,
             child: Icon(Icons.remove_circle_outline,
-                color: Colors.white.withOpacity(0.25), size: 18),
+                color: Colors.white.withValues(alpha: 0.25), size: 18),
           ),
         ],
       ),
@@ -1046,12 +1046,12 @@ class _InlineField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle:
-            TextStyle(color: Colors.white.withOpacity(0.25), fontSize: 12),
+            TextStyle(color: Colors.white.withValues(alpha: 0.25), fontSize: 12),
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.07),
+        fillColor: Colors.white.withValues(alpha: 0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
@@ -1159,11 +1159,11 @@ class _AddExerciseSheetEditState extends State<_AddExerciseSheetEdit> {
               decoration: InputDecoration(
                 hintText: 'Buscar ejercicio...',
                 hintStyle:
-                    TextStyle(color: Colors.white.withOpacity(0.3)),
+                    TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                 prefixIcon: Icon(Icons.search,
-                    color: Colors.white.withOpacity(0.4)),
+                    color: Colors.white.withValues(alpha: 0.4)),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.08),
+                fillColor: Colors.white.withValues(alpha: 0.08),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -1187,7 +1187,7 @@ class _AddExerciseSheetEditState extends State<_AddExerciseSheetEdit> {
                     onSelected: (_) =>
                         setState(() => _category = cat),
                     selectedColor: const Color(0xFFE53935),
-                    backgroundColor: Colors.white.withOpacity(0.08),
+                    backgroundColor: Colors.white.withValues(alpha: 0.08),
                     labelStyle: TextStyle(
                         color: sel ? Colors.white : Colors.white60,
                         fontSize: 13),

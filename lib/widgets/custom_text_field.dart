@@ -42,7 +42,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: widget.label,
-        labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
         filled: true,
         fillColor: const Color(0xFF1A1A1A),
         border: OutlineInputBorder(
@@ -56,7 +56,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide:
-              BorderSide(color: const Color(0xFFE53935).withOpacity(0.6)),
+              BorderSide(color: const Color(0xFFE53935).withValues(alpha: 0.6)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -69,7 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   _obscure
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: Colors.white.withOpacity(0.35),
+                  color: Colors.white.withValues(alpha: 0.35),
                   size: 20,
                 ),
                 onPressed: () => setState(() => _obscure = !_obscure),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/session_model.dart';
-import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../workout/new_session_screen.dart';
@@ -71,8 +70,7 @@ class DashboardScreen extends StatelessWidget {
 
     // Días hasta competición
     final compDate = user?.competitionDate;
-    final daysToComp =
-        compDate != null ? compDate.difference(now).inDays : null;
+    final daysToComp = compDate?.difference(now).inDays;
 
     return Scaffold(
       appBar: AppBar(
@@ -88,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
               _formatToday(now),
               style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.45),
+                  color: Colors.white.withValues(alpha: 0.45),
                   fontWeight: FontWeight.normal),
             ),
           ],
@@ -141,14 +139,14 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // ── Actividad semanal ──────────────────────────────────────
-            _SectionTitle('Actividad esta semana'),
+            const _SectionTitle('Actividad esta semana'),
             const SizedBox(height: 10),
             _WeekActivity(activity: activity),
 
             const SizedBox(height: 24),
 
             // ── Última sesión ──────────────────────────────────────────
-            _SectionTitle('Última sesión'),
+            const _SectionTitle('Última sesión'),
             const SizedBox(height: 10),
             lastSession == null
                 ? _EmptyLastSession()
@@ -157,7 +155,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ── Acceso rápido ──────────────────────────────────────────
-            _SectionTitle('Acceso rápido'),
+            const _SectionTitle('Acceso rápido'),
             const SizedBox(height: 10),
             _QuickAction(
               icon: Icons.add_circle_outline,
@@ -206,13 +204,13 @@ class _CompetitionCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFFE53935).withOpacity(0.15),
-            const Color(0xFFE53935).withOpacity(0.05),
+            const Color(0xFFE53935).withValues(alpha: 0.15),
+            const Color(0xFFE53935).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(14),
         border:
-            Border.all(color: const Color(0xFFE53935).withOpacity(0.3)),
+            Border.all(color: const Color(0xFFE53935).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -220,7 +218,7 @@ class _CompetitionCard extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFFE53935).withOpacity(0.15),
+              color: const Color(0xFFE53935).withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.emoji_events_outlined,
@@ -249,7 +247,7 @@ class _CompetitionCard extends StatelessWidget {
                 Text(
                   '${date.day} ${months[date.month]} ${date.year}',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.45),
+                      color: Colors.white.withValues(alpha: 0.45),
                       fontSize: 12),
                 ),
               ],
@@ -302,14 +300,14 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 1),
             Text(unit,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.35),
+                    color: Colors.white.withValues(alpha: 0.35),
                     fontSize: 10),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
             Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 11)),
           ],
         ),
@@ -352,8 +350,8 @@ class _WeekActivity extends StatelessWidget {
                   color: trained
                       ? const Color(0xFFE53935)
                       : isFuture
-                          ? Colors.white.withOpacity(0.04)
-                          : Colors.white.withOpacity(0.07),
+                          ? Colors.white.withValues(alpha: 0.04)
+                          : Colors.white.withValues(alpha: 0.07),
                   shape: BoxShape.circle,
                   border: isToday
                       ? Border.all(
@@ -376,7 +374,7 @@ class _WeekActivity extends StatelessWidget {
                 style: TextStyle(
                   color: isToday
                       ? const Color(0xFFE53935)
-                      : Colors.white.withOpacity(0.4),
+                      : Colors.white.withValues(alpha: 0.4),
                   fontSize: 11,
                   fontWeight: isToday
                       ? FontWeight.bold
@@ -409,7 +407,7 @@ class _LastSessionCard extends StatelessWidget {
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(14),
         border:
-            Border.all(color: Colors.white.withOpacity(0.06)),
+            Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -428,7 +426,7 @@ class _LastSessionCard extends StatelessWidget {
               if (duration != null)
                 Text(duration,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         fontSize: 13)),
             ],
           ),
@@ -436,7 +434,7 @@ class _LastSessionCard extends StatelessWidget {
           Text(
             _daysAgo(session.date),
             style: TextStyle(
-                color: Colors.white.withOpacity(0.4), fontSize: 12),
+                color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
           ),
           if (session.exercises.isNotEmpty) ...[
             const SizedBox(height: 10),
@@ -459,7 +457,7 @@ class _LastSessionCard extends StatelessWidget {
                 Text(
                   '${session.totalVolume} kg tonelaje',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 12),
                 ),
               ],
@@ -488,7 +486,7 @@ class _Chip extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.1),
+        color: const Color(0xFFE53935).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(label,
@@ -513,12 +511,12 @@ class _EmptyLastSession extends StatelessWidget {
       child: Column(
         children: [
           Icon(Icons.fitness_center,
-              color: Colors.white.withOpacity(0.15), size: 36),
+              color: Colors.white.withValues(alpha: 0.15), size: 36),
           const SizedBox(height: 8),
           Text(
             'Sin sesiones aún',
             style: TextStyle(
-                color: Colors.white.withOpacity(0.35), fontSize: 13),
+                color: Colors.white.withValues(alpha: 0.35), fontSize: 13),
           ),
         ],
       ),
@@ -551,7 +549,7 @@ class _QuickAction extends StatelessWidget {
           color: const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(14),
           border:
-              Border.all(color: Colors.white.withOpacity(0.06)),
+              Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Row(
           children: [
@@ -559,7 +557,7 @@ class _QuickAction extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFE53935).withOpacity(0.12),
+                color: const Color(0xFFE53935).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child:
@@ -578,13 +576,13 @@ class _QuickAction extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(subtitle,
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 12)),
                 ],
               ),
             ),
             Icon(Icons.arrow_forward_ios,
-                color: Colors.white.withOpacity(0.2), size: 14),
+                color: Colors.white.withValues(alpha: 0.2), size: 14),
           ],
         ),
       ),

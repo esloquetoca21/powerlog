@@ -19,7 +19,7 @@ class SessionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,13 +38,13 @@ class SessionCard extends StatelessWidget {
               if (duration != null)
                 Text(duration,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.4), fontSize: 13)),
+                        color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
             ],
           ),
           const SizedBox(height: 4),
           Text(dateStr,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4), fontSize: 13)),
+                  color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
           if (session.exercises.isNotEmpty) ...[
             const SizedBox(height: 12),
             Wrap(
@@ -96,7 +96,7 @@ class _ExerciseChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.12),
+        color: const Color(0xFFE53935).withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(name,
@@ -119,7 +119,7 @@ class _StatItem extends StatelessWidget {
         const SizedBox(width: 4),
         Text(label,
             style: TextStyle(
-                color: Colors.white.withOpacity(0.4), fontSize: 12)),
+                color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
       ],
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_service.dart';
 import '../../services/session_service.dart';
 import '../../widgets/session_card.dart';
 import '../workout/new_session_screen.dart';
@@ -12,7 +11,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthService>();
     final sessionService = context.watch<SessionService>();
 
     return Scaffold(
@@ -45,7 +43,7 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 '${sessionService.sessions.length} sesiones registradas',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 13),
               ),
             ),
@@ -64,19 +62,19 @@ class HomeScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.fitness_center,
-                        color: Colors.white.withOpacity(0.2), size: 64),
+                        color: Colors.white.withValues(alpha: 0.2), size: 64),
                     const SizedBox(height: 16),
                     Text(
                       'Sin sesiones aún',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Pulsa + para empezar',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 14),
                     ),
                   ],

@@ -190,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: _cancelEdit,
               child: Text('Cancelar',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.5))),
+                      color: Colors.white.withValues(alpha: 0.5))),
             ),
           ],
         ],
@@ -229,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     user.email,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         fontSize: 13),
                   ),
                 ],
@@ -373,10 +373,10 @@ class _RoleBadge extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.12),
+        color: const Color(0xFFE53935).withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color: const Color(0xFFE53935).withOpacity(0.3)),
+            color: const Color(0xFFE53935).withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -423,7 +423,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                     fontSize: 11)),
           ],
         ),
@@ -523,7 +523,7 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             child: Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 13)),
           ),
           Text(
@@ -533,7 +533,7 @@ class _InfoRow extends StatelessWidget {
                   ? (highlight
                       ? const Color(0xFFE53935)
                       : Colors.white)
-                  : Colors.white.withOpacity(0.25),
+                  : Colors.white.withValues(alpha: 0.25),
               fontSize: 13,
               fontWeight:
                   value != null ? FontWeight.w500 : FontWeight.normal,
@@ -634,7 +634,7 @@ class _EditableFields extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.calendar_today_outlined,
-                    color: Colors.white.withOpacity(0.4), size: 18),
+                    color: Colors.white.withValues(alpha: 0.4), size: 18),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -644,7 +644,7 @@ class _EditableFields extends StatelessWidget {
                     style: TextStyle(
                       color: competitionDate != null
                           ? Colors.white
-                          : Colors.white.withOpacity(0.35),
+                          : Colors.white.withValues(alpha: 0.35),
                       fontSize: 14,
                     ),
                   ),
@@ -653,7 +653,7 @@ class _EditableFields extends StatelessWidget {
                   GestureDetector(
                     onTap: onClearDate,
                     child: Icon(Icons.close,
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         size: 18),
                   ),
               ],
@@ -704,7 +704,7 @@ class _EditField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.3), fontSize: 14),
+            color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
         filled: true,
         fillColor: const Color(0xFF1A1A1A),
         border: OutlineInputBorder(
@@ -752,13 +752,13 @@ class _ChipRow extends StatelessWidget {
                 horizontal: 14, vertical: 9),
             decoration: BoxDecoration(
               color: isSelected
-                  ? const Color(0xFFE53935).withOpacity(0.12)
+                  ? const Color(0xFFE53935).withValues(alpha: 0.12)
                   : const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isSelected
                     ? const Color(0xFFE53935)
-                    : Colors.white.withOpacity(0.07),
+                    : Colors.white.withValues(alpha: 0.07),
                 width: isSelected ? 1.5 : 1,
               ),
             ),
@@ -766,7 +766,7 @@ class _ChipRow extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? Colors.white
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withValues(alpha: 0.5),
                   fontSize: 13,
                   fontWeight: isSelected
                       ? FontWeight.w600

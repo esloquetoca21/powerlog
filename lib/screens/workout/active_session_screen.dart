@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/session_service.dart';
-import '../../models/exercise_model.dart';
 import '../../widgets/exercise_card.dart';
 import '../../widgets/add_exercise_sheet.dart';
 import 'session_detail_screen.dart';
@@ -260,13 +259,13 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.add_circle_outline,
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         size: 64),
                     const SizedBox(height: 16),
                     Text(
                       'Añade tu primer ejercicio',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 16),
                     ),
                   ],
@@ -373,7 +372,7 @@ class _UncompletedDialog extends StatelessWidget {
           Text(
             '¿Qué quieres hacer con ${plural ? 'ellas' : 'ella'}?',
             style: TextStyle(
-                color: Colors.white.withOpacity(0.55),
+                color: Colors.white.withValues(alpha: 0.55),
                 fontSize: 13),
           ),
           const SizedBox(height: 14),
@@ -439,7 +438,7 @@ class _ActionTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
               horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(

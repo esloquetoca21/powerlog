@@ -215,7 +215,7 @@ class _WeekNavigator extends StatelessWidget {
                         style: TextStyle(
                           color: isToday
                               ? const Color(0xFFE53935)
-                              : Colors.white.withOpacity(0.4),
+                              : Colors.white.withValues(alpha: 0.4),
                           fontSize: 11,
                           fontWeight: isToday
                               ? FontWeight.bold
@@ -230,9 +230,9 @@ class _WeekNavigator extends StatelessWidget {
                         color: isSelected
                             ? const Color(0xFFE53935)
                             : hasSession
-                                ? const Color(0xFFE53935).withOpacity(0.15)
+                                ? const Color(0xFFE53935).withValues(alpha: 0.15)
                                 : isPlanned
-                                    ? Colors.white.withOpacity(0.08)
+                                    ? Colors.white.withValues(alpha: 0.08)
                                     : Colors.transparent,
                         shape: BoxShape.circle,
                         border: isToday && !isSelected
@@ -246,7 +246,7 @@ class _WeekNavigator extends StatelessWidget {
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
-                                : Colors.white.withOpacity(0.85),
+                                : Colors.white.withValues(alpha: 0.85),
                             fontSize: 13,
                             fontWeight: isSelected || isToday
                                 ? FontWeight.bold
@@ -265,7 +265,7 @@ class _WeekNavigator extends StatelessWidget {
                         color: hasSession
                             ? const Color(0xFFE53935)
                             : isPlanned
-                                ? Colors.white.withOpacity(0.25)
+                                ? Colors.white.withValues(alpha: 0.25)
                                 : Colors.transparent,
                       ),
                     ),
@@ -342,7 +342,7 @@ class _PlanDayView extends StatelessWidget {
             Text(
               'Semana $weekNum de ${plan.durationWeeks}',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4), fontSize: 12),
+                  color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
             ),
 
           const SizedBox(height: 20),
@@ -352,13 +352,13 @@ class _PlanDayView extends StatelessWidget {
             _InfoCard(
               icon: Icons.calendar_today_outlined,
               text: 'Este día está fuera del rango del plan activo.',
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
             ),
           ] else if (!isTrainingDay) ...[
             _InfoCard(
               icon: Icons.self_improvement,
               text: 'Día de descanso. Recupera bien para el próximo entrenamiento.',
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
             ),
           ] else ...[
             // Training day
@@ -415,7 +415,7 @@ class _PlanInfoBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
       child: Row(
         children: [
@@ -432,7 +432,7 @@ class _PlanInfoBar extends StatelessWidget {
                 Text(
                   'Semana ${plan.currentWeek} de ${plan.durationWeeks} · $methodLabel',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.4), fontSize: 12),
+                      color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
                 ),
               ],
             ),
@@ -441,7 +441,7 @@ class _PlanInfoBar extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: methodColor.withOpacity(0.12),
+              color: methodColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(methodLabel,
@@ -496,9 +496,9 @@ class _CompletedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.12),
+        color: Colors.green.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -531,7 +531,7 @@ class _CompletedSessionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.green.withOpacity(0.2)),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,20 +546,20 @@ class _CompletedSessionCard extends StatelessWidget {
             children: [
               if (session.duration != null) ...[
                 Icon(Icons.timer_outlined,
-                    color: Colors.white.withOpacity(0.4), size: 14),
+                    color: Colors.white.withValues(alpha: 0.4), size: 14),
                 const SizedBox(width: 4),
                 Text('${session.duration!.inMinutes} min',
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         fontSize: 12)),
                 const SizedBox(width: 12),
               ],
               Icon(Icons.scale_outlined,
-                  color: Colors.white.withOpacity(0.4), size: 14),
+                  color: Colors.white.withValues(alpha: 0.4), size: 14),
               const SizedBox(width: 4),
               Text('${session.totalVolume} kg',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.4), fontSize: 12)),
+                      color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
             ],
           ),
           if (session.exercises.isNotEmpty) ...[
@@ -588,7 +588,7 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.1),
+        color: const Color(0xFFE53935).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(label,
@@ -625,8 +625,8 @@ class _PlannedTrainingCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
             color: isToday
-                ? const Color(0xFFE53935).withOpacity(0.3)
-                : Colors.white.withOpacity(0.06)),
+                ? const Color(0xFFE53935).withValues(alpha: 0.3)
+                : Colors.white.withValues(alpha: 0.06)),
       ),
       child: Column(
         children: [
@@ -634,14 +634,14 @@ class _PlannedTrainingCard extends StatelessWidget {
             Icons.fitness_center,
             color: isToday
                 ? const Color(0xFFE53935)
-                : Colors.white.withOpacity(0.25),
+                : Colors.white.withValues(alpha: 0.25),
             size: 40,
           ),
           const SizedBox(height: 12),
           Text(
             'Día de entrenamiento',
             style: TextStyle(
-                color: isToday ? Colors.white : Colors.white.withOpacity(0.6),
+                color: isToday ? Colors.white : Colors.white.withValues(alpha: 0.6),
                 fontSize: 16,
                 fontWeight: FontWeight.w600),
           ),
@@ -651,7 +651,7 @@ class _PlannedTrainingCard extends StatelessWidget {
                 ? '¡Es hoy! Empieza cuando estés listo.'
                 : 'Sesión planificada para este día.',
             style: TextStyle(
-                color: Colors.white.withOpacity(0.4), fontSize: 13),
+                color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
             textAlign: TextAlign.center,
           ),
           if (isToday) ...[
@@ -693,7 +693,7 @@ class _NoPlanState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.calendar_month_outlined,
-                color: Colors.white.withOpacity(0.15), size: 72),
+                color: Colors.white.withValues(alpha: 0.15), size: 72),
             const SizedBox(height: 20),
             const Text(
               'Sin plan activo',
@@ -707,7 +707,7 @@ class _NoPlanState extends StatelessWidget {
               'Crea un plan de entrenamiento para organizar tus sesiones semana a semana.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   fontSize: 14,
                   height: 1.5),
             ),

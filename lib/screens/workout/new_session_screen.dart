@@ -65,7 +65,7 @@ class _NewSessionScreenState extends State<NewSessionScreen> {
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Ej: Día de banca',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                 filled: true,
                 fillColor: const Color(0xFF1A1A1A),
                 border: OutlineInputBorder(
@@ -105,7 +105,7 @@ class _NewSessionScreenState extends State<NewSessionScreen> {
                         color: const Color(0xFF1A1A1A),
                         borderRadius: BorderRadius.circular(12),
                         border:
-                            Border.all(color: Colors.white.withOpacity(0.07)),
+                            Border.all(color: Colors.white.withValues(alpha: 0.07)),
                       ),
                       child: Row(
                         children: [
@@ -118,7 +118,7 @@ class _NewSessionScreenState extends State<NewSessionScreen> {
                                     color: Colors.white, fontSize: 15)),
                           ),
                           Icon(Icons.chevron_right,
-                              color: Colors.white.withOpacity(0.3)),
+                              color: Colors.white.withValues(alpha: 0.3)),
                         ],
                       ),
                     ),

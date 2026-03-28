@@ -251,7 +251,7 @@ class _ToggleTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(subtitle,
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         fontSize: 12)),
               ],
             ),
@@ -259,7 +259,7 @@ class _ToggleTile extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFFE53935),
+            activeThumbColor: const Color(0xFFE53935),
           ),
         ],
       ),
@@ -304,7 +304,7 @@ class _ActionRow extends StatelessWidget {
                     fontWeight: FontWeight.w500)),
             const Spacer(),
             Icon(Icons.chevron_right,
-                color: Colors.white.withOpacity(0.25), size: 18),
+                color: Colors.white.withValues(alpha: 0.25), size: 18),
           ],
         ),
       ),
@@ -335,12 +335,12 @@ class _InfoTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white.withOpacity(0.4), size: 20),
+          Icon(icon, color: Colors.white.withValues(alpha: 0.4), size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.5), fontSize: 14)),
+                    color: Colors.white.withValues(alpha: 0.5), fontSize: 14)),
           ),
           Text(value,
               style: const TextStyle(

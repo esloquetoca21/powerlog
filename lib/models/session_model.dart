@@ -137,7 +137,7 @@ class SessionModel {
   }
 
   /// Mejor 1RM estimado por cada levantamiento principal (SBD)
-  _SBDTotal get sbdTotal {
+  SBDTotal get sbdTotal {
     double squat = 0, bench = 0, deadlift = 0;
     for (final ex in exercises) {
       final rm = ex.bestEstimated1RM;
@@ -145,16 +145,16 @@ class SessionModel {
       if (ex.category == ExerciseCategory.bench && rm > bench) bench = rm;
       if (ex.category == ExerciseCategory.deadlift && rm > deadlift) deadlift = rm;
     }
-    return _SBDTotal(squat: squat, bench: bench, deadlift: deadlift);
+    return SBDTotal(squat: squat, bench: bench, deadlift: deadlift);
   }
 }
 
-class _SBDTotal {
+class SBDTotal {
   final double squat;
   final double bench;
   final double deadlift;
 
-  const _SBDTotal({
+  const SBDTotal({
     required this.squat,
     required this.bench,
     required this.deadlift,

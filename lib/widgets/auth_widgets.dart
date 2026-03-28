@@ -10,9 +10,9 @@ class AuthErrorBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.10),
+        color: const Color(0xFFE53935).withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE53935).withOpacity(0.35)),
+        border: Border.all(color: const Color(0xFFE53935).withValues(alpha: 0.35)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,18 +46,18 @@ class AuthOrDivider extends StatelessWidget {
       children: [
         Expanded(
             child:
-                Divider(color: Colors.white.withOpacity(0.12), height: 1)),
+                Divider(color: Colors.white.withValues(alpha: 0.12), height: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'o continúa con',
             style: TextStyle(
-                color: Colors.white.withOpacity(0.35), fontSize: 13),
+                color: Colors.white.withValues(alpha: 0.35), fontSize: 13),
           ),
         ),
         Expanded(
             child:
-                Divider(color: Colors.white.withOpacity(0.12), height: 1)),
+                Divider(color: Colors.white.withValues(alpha: 0.12), height: 1)),
       ],
     );
   }
@@ -78,7 +78,7 @@ class GoogleSignInButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: const Color(0xFF1A1A1A),
-          side: BorderSide(color: Colors.white.withOpacity(0.18)),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.18)),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12)),
         ),
@@ -88,7 +88,7 @@ class GoogleSignInButton extends StatelessWidget {
                 height: 20,
                 child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white.withOpacity(0.6)),
+                    color: Colors.white.withValues(alpha: 0.6)),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,

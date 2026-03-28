@@ -290,11 +290,11 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
                 decoration: InputDecoration(
                   hintText: 'Buscar ejercicio...',
                   hintStyle:
-                      TextStyle(color: Colors.white.withOpacity(0.3)),
+                      TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                   prefixIcon: Icon(Icons.search,
-                      color: Colors.white.withOpacity(0.4)),
+                      color: Colors.white.withValues(alpha: 0.4)),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.08),
+                  fillColor: Colors.white.withValues(alpha: 0.08),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -319,7 +319,7 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
                       onSelected: (_) =>
                           setState(() => _selectedCategory = cat),
                       selectedColor: const Color(0xFFE53935),
-                      backgroundColor: Colors.white.withOpacity(0.08),
+                      backgroundColor: Colors.white.withValues(alpha: 0.08),
                       labelStyle: TextStyle(
                           color: selected ? Colors.white : Colors.white60,
                           fontSize: 13),

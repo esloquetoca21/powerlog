@@ -107,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Text(
                   'Empieza a registrar tu progreso hoy',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.45), fontSize: 14),
+                      color: Colors.white.withValues(alpha: 0.45), fontSize: 14),
                 ),
 
                 const SizedBox(height: 36),
@@ -216,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text(
                         '¿Ya tienes cuenta? ',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.45),
+                            color: Colors.white.withValues(alpha: 0.45),
                             fontSize: 14),
                       ),
                       GestureDetector(

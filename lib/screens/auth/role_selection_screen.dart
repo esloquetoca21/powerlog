@@ -57,7 +57,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
               Text(
                 'Esto personaliza tu experiencia en PowerLog.',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.45), fontSize: 14),
+                    color: Colors.white.withValues(alpha: 0.45), fontSize: 14),
               ),
 
               const SizedBox(height: 48),
@@ -128,13 +128,13 @@ class _RoleCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: selected
-              ? const Color(0xFFE53935).withOpacity(0.10)
+              ? const Color(0xFFE53935).withValues(alpha: 0.10)
               : const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: selected
                 ? const Color(0xFFE53935)
-                : Colors.white.withOpacity(0.07),
+                : Colors.white.withValues(alpha: 0.07),
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -145,15 +145,15 @@ class _RoleCard extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 color: selected
-                    ? const Color(0xFFE53935).withOpacity(0.15)
-                    : Colors.white.withOpacity(0.05),
+                    ? const Color(0xFFE53935).withValues(alpha: 0.15)
+                    : Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
                 color: selected
                     ? const Color(0xFFE53935)
-                    : Colors.white.withOpacity(0.5),
+                    : Colors.white.withValues(alpha: 0.5),
                 size: 26,
               ),
             ),
@@ -174,7 +174,7 @@ class _RoleCard extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.45),
+                      color: Colors.white.withValues(alpha: 0.45),
                       fontSize: 13,
                       height: 1.4,
                     ),
@@ -189,7 +189,7 @@ class _RoleCard extends StatelessWidget {
                   : Icons.radio_button_unchecked,
               color: selected
                   ? const Color(0xFFE53935)
-                  : Colors.white.withOpacity(0.2),
+                  : Colors.white.withValues(alpha: 0.2),
               size: 22,
             ),
           ],

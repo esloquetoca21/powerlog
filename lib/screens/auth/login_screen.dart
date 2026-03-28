@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   'Inicia sesión para ver tu progreso',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.45), fontSize: 14),
+                      color: Colors.white.withValues(alpha: 0.45), fontSize: 14),
                 ),
 
                 const SizedBox(height: 32),
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       '¿Olvidaste tu contraseña?',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.5), fontSize: 13),
+                          color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
                     ),
                   ),
                 ),
@@ -213,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         '¿No tienes cuenta? ',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.45),
+                            color: Colors.white.withValues(alpha: 0.45),
                             fontSize: 14),
                       ),
                       GestureDetector(
@@ -328,7 +328,7 @@ class _ForgotPasswordSheetState extends State<_ForgotPasswordSheet> {
             Text(
               'Te enviaremos un enlace para restablecer tu contraseña.',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.5), fontSize: 14),
+                  color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
             ),
             const SizedBox(height: 24),
             CustomTextField(
@@ -353,10 +353,10 @@ class _ForgotPasswordSheetState extends State<_ForgotPasswordSheet> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.12),
+                color: Colors.green.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
                 border:
-                    Border.all(color: Colors.green.withOpacity(0.4)),
+                    Border.all(color: Colors.green.withValues(alpha: 0.4)),
               ),
               child: Row(
                 children: [

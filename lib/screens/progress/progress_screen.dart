@@ -157,7 +157,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         child: Text(
                           'Añade tu peso corporal en el perfil para ver Wilks/DOTS.',
                           style: TextStyle(
-                              color: Colors.white.withOpacity(0.35),
+                              color: Colors.white.withValues(alpha: 0.35),
                               fontSize: 12),
                         ),
                       ),
@@ -240,7 +240,7 @@ class _MiniStat extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                     fontSize: 11)),
           ],
         ),
@@ -269,7 +269,7 @@ class _RecordCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: hasValue
               ? Border.all(
-                  color: const Color(0xFFE53935).withOpacity(0.2))
+                  color: const Color(0xFFE53935).withValues(alpha: 0.2))
               : null,
         ),
         child: Column(
@@ -278,7 +278,7 @@ class _RecordCard extends StatelessWidget {
             Icon(icon,
                 color: hasValue
                     ? const Color(0xFFE53935)
-                    : Colors.white.withOpacity(0.2),
+                    : Colors.white.withValues(alpha: 0.2),
                 size: 16),
             const SizedBox(height: 8),
             Text(
@@ -288,7 +288,7 @@ class _RecordCard extends StatelessWidget {
               style: TextStyle(
                 color: hasValue
                     ? Colors.white
-                    : Colors.white.withOpacity(0.3),
+                    : Colors.white.withValues(alpha: 0.3),
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
@@ -296,7 +296,7 @@ class _RecordCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                     fontSize: 11)),
           ],
         ),
@@ -317,10 +317,10 @@ class _TotalCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFE53935).withOpacity(0.08),
+        color: const Color(0xFFE53935).withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
         border:
-            Border.all(color: const Color(0xFFE53935).withOpacity(0.25)),
+            Border.all(color: const Color(0xFFE53935).withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -339,7 +339,7 @@ class _TotalCard extends StatelessWidget {
               ),
               Text('Total SBD estimado',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.45),
+                      color: Colors.white.withValues(alpha: 0.45),
                       fontSize: 12)),
             ],
           ),
@@ -386,7 +386,7 @@ class _ScoreCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(subtitle,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.35),
+                    color: Colors.white.withValues(alpha: 0.35),
                     fontSize: 11)),
           ],
         ),
@@ -410,13 +410,13 @@ class _NoWeightBanner extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.info_outline,
-              color: Colors.white.withOpacity(0.3), size: 18),
+              color: Colors.white.withValues(alpha: 0.3), size: 18),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               'Añade tu peso corporal en el perfil para calcular Wilks y DOTS.',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.4), fontSize: 13),
+                  color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
             ),
           ),
         ],
@@ -464,7 +464,7 @@ class _LiftSelector extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? Colors.white
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withValues(alpha: 0.5),
                   fontSize: 13,
                   fontWeight: isSelected
                       ? FontWeight.w600
@@ -544,7 +544,7 @@ class _LineChartPainter extends CustomPainter {
 
     // ── Grid lines ───────────────────────────────────────────────────────────
     final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(0.05)
+      ..color = Colors.white.withValues(alpha: 0.05)
       ..strokeWidth = 1;
 
     for (int i = 0; i <= 3; i++) {
@@ -555,14 +555,14 @@ class _LineChartPainter extends CustomPainter {
 
     // ── Y axis labels ─────────────────────────────────────────────────────────
     final labelStyle = TextStyle(
-        color: Colors.white.withOpacity(0.35), fontSize: 10);
+        color: Colors.white.withValues(alpha: 0.35), fontSize: 10);
 
     for (int i = 0; i <= 3; i++) {
       final val = maxV - (rangeV * i / 3);
       final y = padTop + chartH * i / 3;
       _drawText(
         canvas,
-        '${val.toStringAsFixed(0)}',
+        val.toStringAsFixed(0),
         Offset(0, y - 6),
         42,
         labelStyle,
@@ -587,8 +587,8 @@ class _LineChartPainter extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFFE53935).withOpacity(0.18),
-            const Color(0xFFE53935).withOpacity(0.0),
+            const Color(0xFFE53935).withValues(alpha: 0.18),
+            const Color(0xFFE53935).withValues(alpha: 0.0),
           ],
         ).createShader(
           Rect.fromLTWH(padLeft, padTop, chartW, chartH),
@@ -689,13 +689,13 @@ class _ChartPlaceholder extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.show_chart,
-                color: Colors.white.withOpacity(0.15), size: 40),
+                color: Colors.white.withValues(alpha: 0.15), size: 40),
             const SizedBox(height: 8),
             Text(
               'Registra más sesiones para\nver la evolución de tu 1RM',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.3), fontSize: 13),
+                  color: Colors.white.withValues(alpha: 0.3), fontSize: 13),
             ),
           ],
         ),
@@ -714,19 +714,19 @@ class _EmptyState extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.bar_chart,
-              color: Colors.white.withOpacity(0.15), size: 64),
+              color: Colors.white.withValues(alpha: 0.15), size: 64),
           const SizedBox(height: 16),
           Text(
             'Sin datos aún',
             style: TextStyle(
-                color: Colors.white.withOpacity(0.4), fontSize: 16),
+                color: Colors.white.withValues(alpha: 0.4), fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(
             'Guarda sesiones de entrenamiento\npara ver tu progreso aquí.',
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.white.withOpacity(0.25), fontSize: 13),
+                color: Colors.white.withValues(alpha: 0.25), fontSize: 13),
           ),
         ],
       ),

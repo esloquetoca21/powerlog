@@ -99,7 +99,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Nombre ────────────────────────────────────────────────
-            _SectionLabel('Nombre del plan'),
+            const _SectionLabel('Nombre del plan'),
             const SizedBox(height: 8),
             TextField(
               controller: _nameCtrl,
@@ -111,7 +111,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
             const SizedBox(height: 24),
 
             // ── Método ────────────────────────────────────────────────
-            _SectionLabel('Método'),
+            const _SectionLabel('Método'),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -139,7 +139,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
             const SizedBox(height: 24),
 
             // ── Fecha inicio ──────────────────────────────────────────
-            _SectionLabel('Fecha de inicio'),
+            const _SectionLabel('Fecha de inicio'),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: _pickStartDate,
@@ -154,7 +154,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
                 child: Row(
                   children: [
                     Icon(Icons.calendar_today_outlined,
-                        color: Colors.white.withOpacity(0.4), size: 18),
+                        color: Colors.white.withValues(alpha: 0.4), size: 18),
                     const SizedBox(width: 12),
                     Text(
                       '${_startDate.day}/${_startDate.month}/${_startDate.year}',
@@ -169,7 +169,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
             const SizedBox(height: 24),
 
             // ── Duración ──────────────────────────────────────────────
-            _SectionLabel('Duración'),
+            const _SectionLabel('Duración'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -183,13 +183,13 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
                         horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: selected
-                          ? const Color(0xFFE53935).withOpacity(0.12)
+                          ? const Color(0xFFE53935).withValues(alpha: 0.12)
                           : const Color(0xFF1A1A1A),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: selected
                             ? const Color(0xFFE53935)
-                            : Colors.white.withOpacity(0.07),
+                            : Colors.white.withValues(alpha: 0.07),
                         width: selected ? 1.5 : 1,
                       ),
                     ),
@@ -197,7 +197,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
                         style: TextStyle(
                           color: selected
                               ? Colors.white
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                           fontSize: 13,
                           fontWeight: selected
                               ? FontWeight.w600
@@ -211,7 +211,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
             const SizedBox(height: 24),
 
             // ── Días de entrenamiento ─────────────────────────────────
-            _SectionLabel('Días de entrenamiento'),
+            const _SectionLabel('Días de entrenamiento'),
             const SizedBox(height: 8),
             _DaySelector(
               selected: _trainingDays,
@@ -228,7 +228,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
               '${_trainingDays.length} días/semana · '
               '${_trainingDays.length * _durationWeeks} sesiones totales',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.35), fontSize: 12),
+                  color: Colors.white.withValues(alpha: 0.35), fontSize: 12),
             ),
 
             const SizedBox(height: 36),
@@ -248,7 +248,7 @@ class _PlanBuilderScreenState extends State<PlanBuilderScreen> {
     return InputDecoration(
       hintText: hint,
       hintStyle: TextStyle(
-          color: Colors.white.withOpacity(0.3), fontSize: 14),
+          color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
       filled: true,
       fillColor: const Color(0xFF1A1A1A),
       border: OutlineInputBorder(
@@ -307,13 +307,13 @@ class _MethodCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: selected
-                ? color.withOpacity(0.08)
+                ? color.withValues(alpha: 0.08)
                 : const Color(0xFF1A1A1A),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: selected
                   ? color
-                  : Colors.white.withOpacity(0.07),
+                  : Colors.white.withValues(alpha: 0.07),
               width: selected ? 1.5 : 1,
             ),
           ),
@@ -323,20 +323,20 @@ class _MethodCard extends StatelessWidget {
               Icon(icon,
                   color: selected
                       ? color
-                      : Colors.white.withOpacity(0.3),
+                      : Colors.white.withValues(alpha: 0.3),
                   size: 22),
               const SizedBox(height: 8),
               Text(label,
                   style: TextStyle(
                       color: selected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.6),
+                          : Colors.white.withValues(alpha: 0.6),
                       fontSize: 14,
                       fontWeight: FontWeight.w600)),
               const SizedBox(height: 2),
               Text(description,
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.35),
+                      color: Colors.white.withValues(alpha: 0.35),
                       fontSize: 11)),
             ],
           ),
@@ -377,7 +377,7 @@ class _DaySelector extends StatelessWidget {
                   border: Border.all(
                     color: isSelected
                         ? const Color(0xFFE53935)
-                        : Colors.white.withOpacity(0.07),
+                        : Colors.white.withValues(alpha: 0.07),
                   ),
                 ),
                 child: Center(
@@ -386,7 +386,7 @@ class _DaySelector extends StatelessWidget {
                     style: TextStyle(
                       color: isSelected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.4),
+                          : Colors.white.withValues(alpha: 0.4),
                       fontWeight: isSelected
                           ? FontWeight.bold
                           : FontWeight.normal,

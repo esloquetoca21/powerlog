@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
                 Text(
                   'Tu registro de powerlifting',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 14,
                     letterSpacing: 0.5,
                   ),

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
 import '../home/main_screen.dart';
 
@@ -129,13 +127,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   'Estos datos nos ayudan a personalizar tus cálculos y recomendaciones.',
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.45), fontSize: 14),
+                      color: Colors.white.withValues(alpha: 0.45), fontSize: 14),
                 ),
 
                 const SizedBox(height: 36),
 
                 // ── Peso corporal ──────────────────────────────────────────
-                _SectionLabel('Peso corporal (kg)'),
+                const _SectionLabel('Peso corporal (kg)'),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _weightCtrl,
@@ -160,7 +158,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // ── Género ─────────────────────────────────────────────────
-                _SectionLabel('Género'),
+                const _SectionLabel('Género'),
                 const SizedBox(height: 8),
                 _ChipGroup(
                   options: const ['Hombre', 'Mujer', 'Otro'],
@@ -172,7 +170,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // ── Nivel ──────────────────────────────────────────────────
-                _SectionLabel('Nivel'),
+                const _SectionLabel('Nivel'),
                 const SizedBox(height: 8),
                 _ChipGroup(
                   options: const [
@@ -194,7 +192,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // ── Federación ─────────────────────────────────────────────
-                _SectionLabel('Federación (opcional)'),
+                const _SectionLabel('Federación (opcional)'),
                 const SizedBox(height: 8),
                 TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -205,7 +203,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // ── Categoría de peso ──────────────────────────────────────
-                _SectionLabel('Categoría de peso (opcional)'),
+                const _SectionLabel('Categoría de peso (opcional)'),
                 const SizedBox(height: 8),
                 TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -216,7 +214,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 24),
 
                 // ── Próxima competición ────────────────────────────────────
-                _SectionLabel('Próxima competición (opcional)'),
+                const _SectionLabel('Próxima competición (opcional)'),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: _pickCompetitionDate,
@@ -231,7 +229,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.calendar_today_outlined,
-                            color: Colors.white.withOpacity(0.4), size: 18),
+                            color: Colors.white.withValues(alpha: 0.4), size: 18),
                         const SizedBox(width: 12),
                         Text(
                           _competitionDate != null
@@ -240,7 +238,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: TextStyle(
                             color: _competitionDate != null
                                 ? Colors.white
-                                : Colors.white.withOpacity(0.4),
+                                : Colors.white.withValues(alpha: 0.4),
                             fontSize: 15,
                           ),
                         ),
@@ -250,7 +248,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () =>
                                 setState(() => _competitionDate = null),
                             child: Icon(Icons.close,
-                                color: Colors.white.withOpacity(0.3),
+                                color: Colors.white.withValues(alpha: 0.3),
                                 size: 18),
                           ),
                         ],
@@ -279,7 +277,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 14),
+      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
       filled: true,
       fillColor: const Color(0xFF1A1A1A),
       border: OutlineInputBorder(
@@ -292,7 +290,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: const Color(0xFFE53935).withOpacity(0.6)),
+        borderSide: BorderSide(color: const Color(0xFFE53935).withValues(alpha: 0.6)),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -352,20 +350,20 @@ class _ChipGroup extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: isSelected
-                  ? const Color(0xFFE53935).withOpacity(0.12)
+                  ? const Color(0xFFE53935).withValues(alpha: 0.12)
                   : const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isSelected
                     ? const Color(0xFFE53935)
-                    : Colors.white.withOpacity(0.07),
+                    : Colors.white.withValues(alpha: 0.07),
                 width: isSelected ? 1.5 : 1,
               ),
             ),
             child: Text(
               options[i],
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white.withOpacity(0.55),
+                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.55),
                 fontSize: 13,
                 fontWeight:
                     isSelected ? FontWeight.w600 : FontWeight.normal,

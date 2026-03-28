@@ -142,7 +142,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.07),
+                      color: Colors.white.withValues(alpha: 0.07),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -159,7 +159,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                   icon: Icon(Icons.notes_outlined,
                       color: _showExerciseNotes
                           ? const Color(0xFFE53935)
-                          : Colors.white.withOpacity(0.3),
+                          : Colors.white.withValues(alpha: 0.3),
                       size: 20),
                   onPressed: () =>
                       setState(() => _showExerciseNotes = !_showExerciseNotes),
@@ -169,7 +169,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 ),
                 IconButton(
                   icon: Icon(Icons.delete_outline,
-                      color: Colors.white.withOpacity(0.3), size: 20),
+                      color: Colors.white.withValues(alpha: 0.3), size: 20),
                   onPressed: () =>
                       context.read<SessionService>().removeExercise(ex.id),
                   padding: EdgeInsets.zero,
@@ -193,11 +193,11 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 decoration: InputDecoration(
                   hintText: 'Notas del ejercicio...',
                   hintStyle: TextStyle(
-                      color: Colors.white.withOpacity(0.3), fontSize: 12),
+                      color: Colors.white.withValues(alpha: 0.3), fontSize: 12),
                   isDense: true,
                   contentPadding: const EdgeInsets.all(10),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.05),
+                  fillColor: Colors.white.withValues(alpha: 0.05),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -240,7 +240,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE53935).withOpacity(0.12),
+                  color: const Color(0xFFE53935).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.delete_outline,
@@ -279,7 +279,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
         flex: flex,
         child: Text(text,
             style: TextStyle(
-                color: Colors.white.withOpacity(0.35),
+                color: Colors.white.withValues(alpha: 0.35),
                 fontSize: 11,
                 fontWeight: FontWeight.w500)),
       );
@@ -361,8 +361,8 @@ class _SetBlockState extends State<_SetBlock> {
   }
 
   void _disposeSubControllers() {
-    for (final c in _subWeightCtrls) c.dispose();
-    for (final c in _subRepsCtrls) c.dispose();
+    for (final c in _subWeightCtrls) { c.dispose(); }
+    for (final c in _subRepsCtrls) { c.dispose(); }
     _subWeightCtrls = [];
     _subRepsCtrls = [];
   }
@@ -492,7 +492,7 @@ class _SetBlockState extends State<_SetBlock> {
         // ── Fila principal ───────────────────────────────────────────
         Container(
           color: set.completed
-              ? const Color(0xFFE53935).withOpacity(0.05)
+              ? const Color(0xFFE53935).withValues(alpha: 0.05)
               : Colors.transparent,
           padding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
@@ -507,13 +507,13 @@ class _SetBlockState extends State<_SetBlock> {
                     child: set.setType == SetType.normal
                         ? Icon(Icons.circle,
                             size: 6,
-                            color: Colors.white.withOpacity(0.2))
+                            color: Colors.white.withValues(alpha: 0.2))
                         : Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 3, vertical: 1),
                             decoration: BoxDecoration(
                               color: _typeColor(set.setType)
-                                  .withOpacity(0.15),
+                                  .withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -532,7 +532,7 @@ class _SetBlockState extends State<_SetBlock> {
                 width: 26,
                 child: Text('${set.setNumber}',
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         fontSize: 13,
                         fontWeight: FontWeight.w600)),
               ),
@@ -612,7 +612,7 @@ class _SetBlockState extends State<_SetBlock> {
                       ? const Color(0xFFE53935)
                       : widget.noteOpen
                           ? Colors.white54
-                          : Colors.white.withOpacity(0.2),
+                          : Colors.white.withValues(alpha: 0.2),
                 ),
               ),
             ],
@@ -632,12 +632,12 @@ class _SetBlockState extends State<_SetBlock> {
               decoration: InputDecoration(
                 hintText: 'Nota de esta serie...',
                 hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.3), fontSize: 12),
+                    color: Colors.white.withValues(alpha: 0.3), fontSize: 12),
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: 10, vertical: 7),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.05),
+                fillColor: Colors.white.withValues(alpha: 0.05),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -676,14 +676,14 @@ class _SetBlockState extends State<_SetBlock> {
                     Container(
                         width: 1,
                         height: 14,
-                        color: Colors.white.withOpacity(0.1)),
+                        color: Colors.white.withValues(alpha: 0.1)),
                     const SizedBox(width: 12),
                     Icon(
                       Icons.add,
                       size: 14,
                       color: isDropSet
-                          ? Colors.orangeAccent.withOpacity(0.7)
-                          : Colors.purpleAccent.withOpacity(0.7),
+                          ? Colors.orangeAccent.withValues(alpha: 0.7)
+                          : Colors.purpleAccent.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -691,8 +691,8 @@ class _SetBlockState extends State<_SetBlock> {
                       style: TextStyle(
                         fontSize: 12,
                         color: isDropSet
-                            ? Colors.orangeAccent.withOpacity(0.7)
-                            : Colors.purpleAccent.withOpacity(0.7),
+                            ? Colors.orangeAccent.withValues(alpha: 0.7)
+                            : Colors.purpleAccent.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -747,13 +747,13 @@ class _SubSetRow extends StatelessWidget {
                 Container(
                     width: 1,
                     height: 12,
-                    color: Colors.white.withOpacity(0.1)),
+                    color: Colors.white.withValues(alpha: 0.1)),
                 Icon(
                   isLast
                       ? Icons.subdirectory_arrow_right
                       : Icons.more_vert,
                   size: 11,
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                 ),
               ],
             ),
@@ -801,7 +801,7 @@ class _SubSetRow extends StatelessWidget {
             child: GestureDetector(
               onTap: onRemove,
               child: Icon(Icons.close,
-                  color: Colors.white.withOpacity(0.25), size: 16),
+                  color: Colors.white.withValues(alpha: 0.25), size: 16),
             ),
           ),
           const SizedBox(width: 24),
@@ -843,7 +843,7 @@ class _InlineInput extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.07),
+        fillColor: Colors.white.withValues(alpha: 0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
