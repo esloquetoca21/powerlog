@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../models/exercise_def_model.dart';
 import '../../models/exercise_pref_model.dart';
@@ -252,7 +253,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             _NotesTab(pref: _pref, def: def, onPrefUpdated: (p) {
               if (mounted) setState(() => _pref = p);
             }),
-            const _PlaceholderTab(label: 'Vídeo'),
+            _VideoTab(def: def, pref: _pref, onPrefUpdated: (p) {
+              if (mounted) setState(() => _pref = p);
+            }),
           ],
         ),
       ),
@@ -1367,6 +1370,432 @@ class _BestSessionCardState extends State<_BestSessionCard> {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── Tab Vídeo ─────────────────────────────────────────────────────────────────
+
+class _VideoTab extends StatefulWidget {
+  final ExerciseDef def;
+  final ExercisePref pref;
+  final ValueChanged<ExercisePref> onPrefUpdated;
+
+  const _VideoTab({
+    required this.def,
+    required this.pref,
+    required this.onPrefUpdated,
+  });
+
+  @override
+  State<_VideoTab> createState() => _VideoTabState();
+}
+
+class _VideoTabState extends State<_VideoTab> {
+  late ExercisePref _pref;
+
+  @override
+  void initState() {
+    super.initState();
+    _pref = widget.pref;
+  }
+
+  @override
+  void didUpdateWidget(_VideoTab old) {
+    super.didUpdateWidget(old);
+    if (old.pref != widget.pref) _pref = widget.pref;
+  }
+
+  String? get _effectiveUrl =>
+      _pref.customVideoUrl?.isNotEmpty == true
+          ? _pref.customVideoUrl
+          : (widget.def.videoUrl?.isNotEmpty == true
+              ? widget.def.videoUrl
+              : null);
+
+  String? get _videoId {
+    final url = _effectiveUrl;
+    if (url == null) return null;
+    return YoutubePlayer.convertUrlToId(url);
+  }
+
+  Future<void> _openUrlDialog({bool editing = false}) async {
+    final ctrl = TextEditingController(
+        text: editing ? (_pref.customVideoUrl ?? '') : '');
+    String? errorText;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF1A1A1A),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            editing ? 'Cambiar vídeo' : 'Añadir vídeo de referencia',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Pega una URL de YouTube',
+                style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.45),
+                    fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: ctrl,
+                autofocus: true,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: 'https://www.youtube.com/watch?v=...',
+                  hintStyle: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.25),
+                      fontSize: 13),
+                  filled: true,
+                  fillColor: Colors.white.withValues(alpha: 0.07),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  errorText: errorText,
+                  errorStyle: const TextStyle(color: Color(0xFFE53935)),
+                ),
+                onChanged: (_) {
+                  if (errorText != null) {
+                    setDialogState(() => errorText = null);
+                  }
+                },
+              ),
+              if (editing && _pref.customVideoUrl?.isNotEmpty == true) ...[
+                const SizedBox(height: 16),
+                const Divider(color: Colors.white10),
+                TextButton.icon(
+                  onPressed: () async {
+                    Navigator.pop(ctx);
+                    await _removeCustomVideo();
+                  },
+                  icon: const Icon(Icons.delete_outline,
+                      size: 16, color: Colors.white38),
+                  label: const Text('Eliminar vídeo personalizado',
+                      style:
+                          TextStyle(color: Colors.white38, fontSize: 13)),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancelar',
+                  style: TextStyle(color: Colors.white54)),
+            ),
+            TextButton(
+              onPressed: () async {
+                final url = ctrl.text.trim();
+                if (url.isEmpty) {
+                  setDialogState(
+                      () => errorText = 'Introduce una URL.');
+                  return;
+                }
+                final isYoutube = url.contains('youtube.com') ||
+                    url.contains('youtu.be');
+                if (!isYoutube) {
+                  setDialogState(() =>
+                      errorText = 'La URL debe ser de YouTube.');
+                  return;
+                }
+                final id = YoutubePlayer.convertUrlToId(url);
+                if (id == null) {
+                  setDialogState(() =>
+                      errorText = 'No se reconoce como vídeo de YouTube.');
+                  return;
+                }
+                Navigator.pop(ctx);
+                await _saveCustomVideo(url);
+              },
+              child: const Text('Guardar',
+                  style: TextStyle(color: Color(0xFFE53935))),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveCustomVideo(String url) async {
+    final uid = context.read<AuthService>().currentUser?.uid;
+    if (uid == null) return;
+    final updated = _pref.copyWith(
+      customVideoUrl: url,
+      updatedAt: DateTime.now(),
+    );
+    await context.read<ExerciseService>().updatePref(updated, uid);
+    if (mounted) {
+      setState(() => _pref = updated);
+      widget.onPrefUpdated(updated);
+    }
+  }
+
+  Future<void> _removeCustomVideo() async {
+    final uid = context.read<AuthService>().currentUser?.uid;
+    if (uid == null) return;
+    final updated = _pref.copyWith(
+      clearCustomVideoUrl: true,
+      updatedAt: DateTime.now(),
+    );
+    await context.read<ExerciseService>().updatePref(updated, uid);
+    if (mounted) {
+      setState(() => _pref = updated);
+      widget.onPrefUpdated(updated);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final videoId = _videoId;
+    final hasCustom = _pref.customVideoUrl?.isNotEmpty == true;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (videoId != null) ...[
+            // Thumbnail + player
+            _VideoThumbnail(
+              videoId: videoId,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      _YoutubePlayerScreen(videoId: videoId),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            if (hasCustom)
+              Text(
+                'Vídeo personalizado',
+                style: TextStyle(
+                    color: const Color(0xFFE53935).withValues(alpha: 0.8),
+                    fontSize: 11),
+              )
+            else
+              Text(
+                'Vídeo del sistema',
+                style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    fontSize: 11),
+              ),
+            const SizedBox(height: 20),
+            // Action buttons
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _openUrlDialog(editing: true),
+                icon: const Icon(Icons.video_library_outlined,
+                    size: 18, color: Color(0xFFE53935)),
+                label: Text(
+                  hasCustom ? 'Cambiar vídeo' : 'Usar mi propio vídeo',
+                  style: const TextStyle(color: Color(0xFFE53935)),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side:
+                      const BorderSide(color: Color(0xFFE53935), width: 1),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ),
+            if (hasCustom) ...[
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: _removeCustomVideo,
+                  icon: Icon(Icons.delete_outline,
+                      size: 16,
+                      color: Colors.white.withValues(alpha: 0.35)),
+                  label: Text(
+                    'Eliminar vídeo personalizado',
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.35),
+                        fontSize: 13),
+                  ),
+                ),
+              ),
+            ],
+          ] else ...[
+            // Empty state
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.play_circle_outline,
+                        size: 64,
+                        color: Colors.white.withValues(alpha: 0.12)),
+                    const SizedBox(height: 16),
+                    const Text('Sin vídeo de referencia',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Añade un vídeo de YouTube\npara tener una referencia técnica.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.4),
+                          height: 1.5),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () => _openUrlDialog(),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Añadir vídeo de referencia'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE53935),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── Video thumbnail widget ────────────────────────────────────────────────────
+
+class _VideoThumbnail extends StatelessWidget {
+  final String videoId;
+  final VoidCallback onTap;
+
+  const _VideoThumbnail({required this.videoId, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final thumbUrl =
+        'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+    return GestureDetector(
+      onTap: onTap,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.network(
+                thumbUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: const Color(0xFF1A1A1A),
+                  child: const Center(
+                    child: Icon(Icons.broken_image_outlined,
+                        color: Colors.white24, size: 40),
+                  ),
+                ),
+              ),
+              // Dark overlay
+              Container(color: Colors.black.withValues(alpha: 0.35)),
+              // Play button
+              Center(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE53935).withValues(alpha: 0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFE53935).withValues(alpha: 0.4),
+                        blurRadius: 16,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.play_arrow,
+                      color: Colors.white, size: 32),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Fullscreen YouTube player screen ─────────────────────────────────────────
+
+class _YoutubePlayerScreen extends StatefulWidget {
+  final String videoId;
+
+  const _YoutubePlayerScreen({required this.videoId});
+
+  @override
+  State<_YoutubePlayerScreen> createState() => _YoutubePlayerScreenState();
+}
+
+class _YoutubePlayerScreenState extends State<_YoutubePlayerScreen> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+        enableCaption: false,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: const Color(0xFFE53935),
+        progressColors: const ProgressBarColors(
+          playedColor: Color(0xFFE53935),
+          handleColor: Color(0xFFE53935),
+        ),
+      ),
+      builder: (context, player) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: Center(child: player),
       ),
     );
   }
