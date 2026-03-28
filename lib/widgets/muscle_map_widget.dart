@@ -62,30 +62,35 @@ class _MuscleMapWidgetState extends State<MuscleMapWidget> {
     return (front, back);
   }
 
-  /// Replaces the fill color of a muscle element identified by [muscleId].
-  ///
-  /// Handles two orderings of attributes:
-  ///   <path id="muscleId" fill="...">
-  ///   <path fill="..." id="muscleId">
-  /// Also handles <g id="muscleId"> by injecting a fill attribute.
+  /// Finds the <g id="muscleId">…</g> block and replaces every fill="…"
+  /// attribute on child elements with [color].
+  /// Falls back to direct element coloring for non-group elements.
   String _colorMuscle(String svg, String muscleId, String color) {
-    // Case 1: id comes before fill  →  id="X" ... fill="old"
+    final openTag = '<g id="$muscleId">';
+    final closeTag = '</g>';
+
+    final start = svg.indexOf(openTag);
+    if (start != -1) {
+      final innerStart = start + openTag.length;
+      final end = svg.indexOf(closeTag, innerStart);
+      if (end != -1) {
+        final before = svg.substring(0, innerStart);
+        final inner = svg
+            .substring(innerStart, end)
+            .replaceAll(RegExp(r'fill="[^"]*"'), 'fill="$color"');
+        final after = svg.substring(end);
+        return before + inner + after;
+      }
+    }
+
+    // Fallback: direct element with id attribute (single-element muscles)
     svg = svg.replaceAllMapped(
       RegExp('(id="$muscleId"[^>]*?)fill="[^"]*"'),
       (m) => '${m.group(1)}fill="$color"',
     );
-
-    // Case 2: fill comes before id  →  fill="old" ... id="X"
     svg = svg.replaceAllMapped(
       RegExp('fill="[^"]*"([^>]*?id="$muscleId")'),
       (m) => 'fill="$color"${m.group(1)}',
-    );
-
-    // Case 3: element with id but no fill attribute (e.g. <g id="X">)
-    // Insert fill after the id attribute.
-    svg = svg.replaceAllMapped(
-      RegExp('(id="$muscleId")(?![^>]*fill=)'),
-      (m) => '${m.group(1)} fill="$color"',
     );
 
     return svg;
