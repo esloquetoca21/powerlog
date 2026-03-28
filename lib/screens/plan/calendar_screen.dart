@@ -500,13 +500,13 @@ class _CompletedBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.check_circle_outline,
+          Icon(Icons.check_circle_outline,
               color: Colors.green, size: 16),
-          const SizedBox(width: 6),
-          const Text('Entrenamiento completado',
+          SizedBox(width: 6),
+          Text('Entrenamiento completado',
               style: TextStyle(
                   color: Colors.green,
                   fontSize: 13,

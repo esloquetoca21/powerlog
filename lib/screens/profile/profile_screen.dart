@@ -257,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
 
             // ── Datos del atleta ───────────────────────────────────────
-            _SectionTitle('Datos del atleta'),
+            const _SectionTitle('Datos del atleta'),
             const SizedBox(height: 12),
 
             _editing
@@ -292,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // ── Cuenta ─────────────────────────────────────────────────
             if (!_editing) ...[
-              _SectionTitle('Cuenta'),
+              const _SectionTitle('Cuenta'),
               const SizedBox(height: 12),
               _ActionRow(
                 icon: Icons.settings_outlined,
@@ -341,8 +341,8 @@ class _Avatar extends StatelessWidget {
     return Container(
       width: 80,
       height: 80,
-      decoration: BoxDecoration(
-        color: const Color(0xFFE53935),
+      decoration: const BoxDecoration(
+        color: Color(0xFFE53935),
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -577,7 +577,7 @@ class _EditableFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _FieldLabel('Peso corporal (kg)'),
+        const _FieldLabel('Peso corporal (kg)'),
         const SizedBox(height: 6),
         _EditField(
           controller: weightCtrl,
@@ -589,7 +589,7 @@ class _EditableFields extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        _FieldLabel('Género'),
+        const _FieldLabel('Género'),
         const SizedBox(height: 6),
         _ChipRow(
           options: const ['Hombre', 'Mujer', 'Otro'],
@@ -598,7 +598,7 @@ class _EditableFields extends StatelessWidget {
           onSelected: onGenderChanged,
         ),
         const SizedBox(height: 16),
-        _FieldLabel('Nivel'),
+        const _FieldLabel('Nivel'),
         const SizedBox(height: 6),
         _ChipRow(
           options: const [
@@ -611,15 +611,15 @@ class _EditableFields extends StatelessWidget {
           onSelected: onLevelChanged,
         ),
         const SizedBox(height: 16),
-        _FieldLabel('Federación (opcional)'),
+        const _FieldLabel('Federación (opcional)'),
         const SizedBox(height: 6),
         _EditField(controller: federationCtrl, hint: 'Ej. FEPE, IPF'),
         const SizedBox(height: 16),
-        _FieldLabel('Categoría de peso (opcional)'),
+        const _FieldLabel('Categoría de peso (opcional)'),
         const SizedBox(height: 6),
         _EditField(controller: categoryCtrl, hint: 'Ej. -83 kg'),
         const SizedBox(height: 16),
-        _FieldLabel('Próxima competición (opcional)'),
+        const _FieldLabel('Próxima competición (opcional)'),
         const SizedBox(height: 6),
         GestureDetector(
           onTap: onPickDate,

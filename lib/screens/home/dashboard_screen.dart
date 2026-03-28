@@ -149,7 +149,7 @@ class DashboardScreen extends StatelessWidget {
             const _SectionTitle('Última sesión'),
             const SizedBox(height: 10),
             lastSession == null
-                ? _EmptyLastSession()
+                ? const _EmptyLastSession()
                 : _LastSessionCard(session: lastSession),
 
             const SizedBox(height: 24),

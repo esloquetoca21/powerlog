@@ -311,7 +311,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
             const SizedBox(height: 20),
 
             // ── Bienestar ─────────────────────────────────────────────
-            _SectionTitle('Bienestar del día'),
+            const _SectionTitle('Bienestar del día'),
             const SizedBox(height: 10),
             if (_editing) ...[
               WellnessSlider(
@@ -399,7 +399,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
             const SizedBox(height: 24),
 
             // ── Ejercicios ────────────────────────────────────────────
-            _SectionTitle('Ejercicios'),
+            const _SectionTitle('Ejercicios'),
             const SizedBox(height: 10),
 
             ..._exercises.asMap().entries.map((entry) {
@@ -435,7 +435,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
             const SizedBox(height: 24),
 
             // ── Notas ─────────────────────────────────────────────────
-            _SectionTitle('Notas'),
+            const _SectionTitle('Notas'),
             const SizedBox(height: 10),
             _editing
                 ? TextField(
@@ -483,7 +483,7 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
             // ── AI insights ───────────────────────────────────────────
             if (session.aiInsights != null) ...[
               const SizedBox(height: 24),
-              _SectionTitle('Análisis IA'),
+              const _SectionTitle('Análisis IA'),
               const SizedBox(height: 10),
               Container(
                 width: double.infinity,
@@ -497,14 +497,14 @@ class _SavedSessionScreenState extends State<SavedSessionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
-                        const Icon(Icons.auto_awesome,
+                        Icon(Icons.auto_awesome,
                             color: Color(0xFFE53935), size: 14),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         Text('Claude',
                             style: TextStyle(
-                                color: const Color(0xFFE53935),
+                                color: Color(0xFFE53935),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ],

@@ -108,7 +108,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   const SizedBox(height: 24),
 
                   // ── Récords personales ──────────────────────────────────
-                  _SectionTitle('Récords personales (1RM estimado)'),
+                  const _SectionTitle('Récords personales (1RM estimado)'),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -136,7 +136,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   // ── Wilks / DOTS ────────────────────────────────────────
                   if (wilksScore != null) ...[
                     const SizedBox(height: 24),
-                    _SectionTitle('Puntuación relativa'),
+                    const _SectionTitle('Puntuación relativa'),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -163,7 +163,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       ),
                   ] else if (bw == null) ...[
                     const SizedBox(height: 24),
-                    _SectionTitle('Puntuación relativa'),
+                    const _SectionTitle('Puntuación relativa'),
                     const SizedBox(height: 10),
                     _NoWeightBanner(),
                   ],
@@ -171,7 +171,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   const SizedBox(height: 24),
 
                   // ── Evolución 1RM ───────────────────────────────────────
-                  _SectionTitle('Evolución 1RM estimado'),
+                  const _SectionTitle('Evolución 1RM estimado'),
                   const SizedBox(height: 12),
                   _LiftSelector(
                     selected: _selectedLift,

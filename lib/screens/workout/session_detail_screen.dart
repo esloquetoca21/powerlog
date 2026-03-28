@@ -209,7 +209,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               const SizedBox(height: 24),
 
               // ── Ejercicios ───────────────────────────────────────────────
-              _SectionTitle('Ejercicios'),
+              const _SectionTitle('Ejercicios'),
               const SizedBox(height: 10),
               ...session.exercises.map((e) => _ExerciseSummaryRow(exercise: e)),
 
@@ -224,7 +224,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               const SizedBox(height: 24),
 
               // ── Valoraciones ─────────────────────────────────────────────
-              _SectionTitle('Cómo fue el día'),
+              const _SectionTitle('Cómo fue el día'),
               const SizedBox(height: 14),
               WellnessSlider(
                 icon: Icons.sentiment_satisfied_alt_outlined,
@@ -274,7 +274,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               const SizedBox(height: 24),
 
               // ── Notas ────────────────────────────────────────────────────
-              _SectionTitle('Notas (opcional)'),
+              const _SectionTitle('Notas (opcional)'),
               const SizedBox(height: 10),
               TextField(
                 controller: _notesCtrl,
@@ -425,7 +425,7 @@ class _BestLiftsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionTitle('Mejores 1RM estimados'),
+        const _SectionTitle('Mejores 1RM estimados'),
         const SizedBox(height: 10),
         Row(
           children: sbd.entries.map((entry) {

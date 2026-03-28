@@ -22,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Unidades ──────────────────────────────────────────────────
-            _SectionTitle('Unidades'),
+            const _SectionTitle('Unidades'),
             const SizedBox(height: 10),
             _ToggleTile(
               icon: Icons.monitor_weight_outlined,
@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ── Notificaciones ────────────────────────────────────────────
-            _SectionTitle('Notificaciones'),
+            const _SectionTitle('Notificaciones'),
             const SizedBox(height: 10),
             _ToggleTile(
               icon: Icons.notifications_outlined,
@@ -52,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ── Cuenta ────────────────────────────────────────────────────
-            _SectionTitle('Cuenta'),
+            const _SectionTitle('Cuenta'),
             const SizedBox(height: 10),
             _ActionRow(
               icon: Icons.lock_outline,
@@ -71,15 +71,15 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ── Información ───────────────────────────────────────────────
-            _SectionTitle('Información'),
+            const _SectionTitle('Información'),
             const SizedBox(height: 10),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.info_outline,
               label: 'Versión',
               value: '1.0.0 (1)',
             ),
             const SizedBox(height: 8),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.code_outlined,
               label: 'Desarrollado con',
               value: 'Flutter + Firebase',
