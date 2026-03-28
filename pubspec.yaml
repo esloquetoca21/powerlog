@@ -29,6 +29,7 @@ dependencies:
   uuid: ^4.4.2
   shared_preferences: ^2.3.2
   fl_chart: ^0.68.0
+  image_picker: ^1.0.4
   youtube_player_flutter: ^8.1.2
   flutter_svg: ^2.0.9
   cached_network_image: ^3.3.0

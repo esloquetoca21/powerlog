@@ -367,6 +367,14 @@ class _AddExerciseSheetState extends State<AddExerciseSheet> {
         return 'Banca';
       case ExerciseCategory.deadlift:
         return 'Peso Muerto';
+      case ExerciseCategory.row:
+        return 'Remo';
+      case ExerciseCategory.overhead:
+        return 'Press OHP';
+      case ExerciseCategory.olympic:
+        return 'Olímpico';
+      case ExerciseCategory.carry:
+        return 'Acarreo';
       case ExerciseCategory.accessory:
         return 'Accesorio';
     }

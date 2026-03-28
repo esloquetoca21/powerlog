@@ -1,6 +1,15 @@
 import 'set_model.dart';
 
-enum ExerciseCategory { squat, bench, deadlift, accessory }
+enum ExerciseCategory {
+  squat,     // Sentadilla
+  bench,     // Press banca
+  deadlift,  // Peso muerto
+  row,       // Remo / tracción horizontal
+  overhead,  // Press por encima de la cabeza
+  accessory, // Accesorios generales
+  olympic,   // Levantamiento olímpico
+  carry,     // Acarreos
+}
 
 class ExerciseModel {
   final String id;
