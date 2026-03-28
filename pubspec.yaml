@@ -39,6 +39,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 
+dependency_overrides:
+  # flutter_inappwebview 5.x (required by youtube_player_flutter 8.x) lacks the
+  # Android namespace declaration needed by AGP 8+. Override to 6.x which adds it.
+  flutter_inappwebview: ^6.1.5
+
 flutter:
   uses-material-design: true
   assets:
