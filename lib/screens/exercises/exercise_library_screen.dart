@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/exercise_def_model.dart';
+import '../../models/exercise_model.dart';
 import '../../services/exercise_service.dart';
 import 'create_exercise_screen.dart';
 import 'exercise_detail_screen.dart';
