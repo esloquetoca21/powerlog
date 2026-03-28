@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 
 import '../models/exercise_model.dart';
 import '../models/set_model.dart';
+import '../services/exercise_service.dart';
+import '../services/exercise_stats_service.dart';
 import '../services/session_service.dart';
 
 class ExerciseCard extends StatefulWidget {
@@ -49,6 +51,18 @@ class _ExerciseCardState extends State<ExerciseCard> {
 
   void _persist(ExerciseModel updated) =>
       context.read<SessionService>().updateExercise(updated);
+
+  void _showStatsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A1A1A),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => _ExerciseStatsSheet(exerciseName: widget.exercise.name),
+    );
+  }
 
   void _saveExerciseNotes(String value) => _persist(widget.exercise.copyWith(
         notes: value.trim().isEmpty ? null : value.trim(),
@@ -163,6 +177,15 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       size: 20),
                   onPressed: () =>
                       setState(() => _showExerciseNotes = !_showExerciseNotes),
+                  padding: EdgeInsets.zero,
+                  constraints:
+                      const BoxConstraints(minWidth: 36, minHeight: 36),
+                ),
+                IconButton(
+                  icon: Icon(Icons.bar_chart,
+                      color: Colors.white.withValues(alpha: 0.3), size: 20),
+                  onPressed: _showStatsSheet,
+                  tooltip: 'Estadísticas',
                   padding: EdgeInsets.zero,
                   constraints:
                       const BoxConstraints(minWidth: 36, minHeight: 36),
@@ -288,6 +311,10 @@ class _ExerciseCardState extends State<ExerciseCard> {
         ExerciseCategory.squat => Colors.blueAccent,
         ExerciseCategory.bench => Colors.greenAccent,
         ExerciseCategory.deadlift => const Color(0xFFE53935),
+        ExerciseCategory.row => Colors.tealAccent,
+        ExerciseCategory.overhead => Colors.purpleAccent,
+        ExerciseCategory.olympic => Colors.amberAccent,
+        ExerciseCategory.carry => Colors.cyanAccent,
         ExerciseCategory.accessory => Colors.orangeAccent,
       };
 }
@@ -852,6 +879,347 @@ class _InlineInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: accent, width: 1),
         ),
+      ),
+    );
+  }
+}
+
+// ── Exercise stats bottom sheet ───────────────────────────────────────────────
+
+class _ExerciseStatsSheet extends StatefulWidget {
+  final String exerciseName;
+
+  const _ExerciseStatsSheet({required this.exerciseName});
+
+  @override
+  State<_ExerciseStatsSheet> createState() => _ExerciseStatsSheetState();
+}
+
+class _ExerciseStatsSheetState extends State<_ExerciseStatsSheet> {
+  late Future<ExerciseStats> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _load();
+  }
+
+  Future<ExerciseStats> _load() async {
+    final sessions = context.read<SessionService>().sessions;
+    return ExerciseStatsService().calculate(widget.exerciseName, sessions, 0);
+  }
+
+  String _fmtDate(DateTime d) {
+    const months = [
+      '', 'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+      'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+    ];
+    return '${d.day} ${months[d.month]} ${d.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Also grab notes from ExerciseService if available
+    final exerciseSvc = context.read<ExerciseService>();
+    final defId = exerciseSvc.allExercises
+        .where((e) => e.name.toLowerCase() == widget.exerciseName.toLowerCase())
+        .map((e) => e.id)
+        .firstOrNull;
+    final notes = defId != null
+        ? exerciseSvc.getPref(defId).notes
+        : '';
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5,
+      maxChildSize: 0.7,
+      minChildSize: 0.35,
+      expand: false,
+      builder: (context, scrollCtrl) => Column(
+        children: [
+          // Handle
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                const Icon(Icons.bar_chart,
+                    color: Color(0xFFE53935), size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    widget.exerciseName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: Colors.white10),
+          Expanded(
+            child: FutureBuilder<ExerciseStats>(
+              future: _future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                        color: Color(0xFFE53935), strokeWidth: 2),
+                  );
+                }
+
+                final stats = snapshot.data!;
+
+                if (stats.totalSets == 0) {
+                  return ListView(
+                    controller: scrollCtrl,
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    children: [
+                      Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.history,
+                                size: 40,
+                                color: Colors.white.withValues(alpha: 0.15)),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Sin historial todavía',
+                              style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.4),
+                                  fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (notes.isNotEmpty) ...[
+                        const SizedBox(height: 24),
+                        _SheetSection(
+                          icon: Icons.notes_outlined,
+                          title: 'Mis notas',
+                          child: Text(notes,
+                              style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  fontSize: 13,
+                                  height: 1.5)),
+                        ),
+                      ],
+                    ],
+                  );
+                }
+
+                // Last set (most recent in allSets, sorted chronologically)
+                final lastSet = stats.allSets.isNotEmpty
+                    ? stats.allSets.last
+                    : null;
+
+                return ListView(
+                  controller: scrollCtrl,
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  children: [
+                    // Row: PR + 1RM
+                    Row(
+                      children: [
+                        _SheetStatCard(
+                          label: 'Récord personal',
+                          value: stats.personalRecord != null
+                              ? '${stats.personalRecord!.weight.toStringAsFixed(1)} kg'
+                              : '—',
+                          sub: stats.personalRecord != null
+                              ? '× ${stats.personalRecord!.reps} reps'
+                                  '${stats.prDate != null ? '\n${_fmtDate(stats.prDate!)}' : ''}'
+                              : '',
+                          icon: Icons.emoji_events_outlined,
+                          highlight: true,
+                        ),
+                        const SizedBox(width: 10),
+                        _SheetStatCard(
+                          label: '1RM estimado',
+                          value: stats.maxEstimated1RM > 0
+                              ? '${stats.maxEstimated1RM.toStringAsFixed(1)} kg'
+                              : '—',
+                          sub: 'Fórmula Epley',
+                          icon: Icons.trending_up,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Row: Last used + last performed
+                    Row(
+                      children: [
+                        _SheetStatCard(
+                          label: 'Último uso',
+                          value: lastSet != null
+                              ? '${lastSet.weight.toStringAsFixed(1)} kg'
+                              : '—',
+                          sub: lastSet != null
+                              ? '× ${lastSet.reps} reps'
+                              : '',
+                          icon: Icons.history,
+                        ),
+                        const SizedBox(width: 10),
+                        _SheetStatCard(
+                          label: 'Última sesión',
+                          value: stats.lastPerformed != null
+                              ? _fmtDate(stats.lastPerformed!)
+                              : '—',
+                          sub: '${stats.totalSets} series en total',
+                          icon: Icons.calendar_today_outlined,
+                        ),
+                      ],
+                    ),
+
+                    if (notes.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      _SheetSection(
+                        icon: Icons.notes_outlined,
+                        title: 'Mis notas',
+                        child: Text(notes,
+                            style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.7),
+                                fontSize: 13,
+                                height: 1.5)),
+                      ),
+                    ],
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SheetStatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String sub;
+  final IconData icon;
+  final bool highlight;
+
+  const _SheetStatCard({
+    required this.label,
+    required this.value,
+    required this.sub,
+    required this.icon,
+    this.highlight = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: highlight
+              ? const Color(0xFFE53935).withValues(alpha: 0.08)
+              : const Color(0xFF222222),
+          borderRadius: BorderRadius.circular(12),
+          border: highlight
+              ? Border.all(
+                  color: const Color(0xFFE53935).withValues(alpha: 0.3))
+              : null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon,
+                    size: 14,
+                    color: highlight
+                        ? const Color(0xFFE53935)
+                        : Colors.white.withValues(alpha: 0.35)),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(label,
+                      style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.4),
+                          fontSize: 11),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(value,
+                style: TextStyle(
+                    color: highlight
+                        ? const Color(0xFFE53935)
+                        : Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
+            if (sub.isNotEmpty)
+              Text(sub,
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.35),
+                      fontSize: 11,
+                      height: 1.4)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetSection extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Widget child;
+
+  const _SheetSection({
+    required this.icon,
+    required this.title,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF222222),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon,
+                  size: 14,
+                  color: Colors.white.withValues(alpha: 0.35)),
+              const SizedBox(width: 6),
+              Text(title,
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.4),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
       ),
     );
   }
