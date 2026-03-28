@@ -49,3 +49,5 @@ pubspec.lock
 # Firebase - NUNCA commitear este archivo con credenciales reales
 # google-services.json
 # GoogleService-Info.plist
+serviceAccountKey.json
+powerlog_exercises_v4_DEFINITIVA.json
