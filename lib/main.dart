@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'services/auth_service.dart';
+import 'services/exercise_service.dart';
 import 'services/plan_service.dart';
 import 'services/session_service.dart';
 import 'services/settings_service.dart';
@@ -32,6 +33,7 @@ class PowerLogApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SessionService()),
         ChangeNotifierProvider(create: (_) => PlanService()),
         ChangeNotifierProvider(create: (_) => SettingsService()),
+        ChangeNotifierProvider(create: (_) => ExerciseService()),
       ],
       child: MaterialApp(
         title: 'PowerLog',

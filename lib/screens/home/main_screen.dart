@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
+import '../../services/exercise_service.dart';
 import '../../services/plan_service.dart';
 import '../../services/session_service.dart';
 import 'dashboard_screen.dart';
 import 'home_screen.dart';
+import '../exercises/exercise_library_screen.dart';
 import '../plan/calendar_screen.dart';
 import '../progress/progress_screen.dart';
 import '../profile/profile_screen.dart';
@@ -25,6 +27,7 @@ class _MainScreenState extends State<MainScreen> {
     DashboardScreen(),
     CalendarScreen(),
     HomeScreen(),
+    ExerciseLibraryScreen(),
     ProgressScreen(),
     ProfileScreen(),
   ];
@@ -39,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
       if (uid != null) {
         context.read<SessionService>().loadSessions(uid);
         context.read<PlanService>().loadPlans(uid);
+        context.read<ExerciseService>().initialize(uid);
       }
     });
   }
@@ -75,6 +79,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.fitness_center_outlined),
             activeIcon: Icon(Icons.fitness_center),
             label: 'Historial',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_outlined),
+            activeIcon: Icon(Icons.menu_book),
+            label: 'Biblioteca',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart_outlined),
