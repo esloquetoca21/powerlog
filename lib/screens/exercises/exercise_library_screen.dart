@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/exercise_def_model.dart';
-import '../../models/exercise_model.dart';
-// import '../../services/exercise_service.dart';
+import '../../services/exercise_service.dart';
 import 'create_exercise_screen.dart';
+import 'exercise_detail_screen.dart';
 
 // ---------------------------------------------------------------------------
 // ExerciseLibraryScreen
@@ -33,142 +34,6 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   bool _gridView = false;
   String _sortOrder = 'az';
 
-  // ── Stub data ──────────────────────────────────────────────────────────────
-  List<ExerciseDef> _stubExercises() {
-    return [
-      const ExerciseDef(
-        id: 'squat_1',
-        name: 'Sentadilla',
-        nameEn: 'Back Squat',
-        description: 'Sentadilla con barra en la espalda alta o baja.',
-        primaryMuscle: 'cuádriceps',
-        secondaryMuscles: ['glúteos', 'isquiotibiales', 'erectores', 'core'],
-        category: ExerciseCategory.squat,
-        disciplines: ['powerlifting', 'culturismo'],
-        equipment: ['barra'],
-        difficulty: 3,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'bench_1',
-        name: 'Press de banca',
-        nameEn: 'Bench Press',
-        description: 'Press de banca plano con barra.',
-        primaryMuscle: 'pectoral',
-        secondaryMuscles: ['tríceps', 'deltoides_anterior'],
-        category: ExerciseCategory.bench,
-        disciplines: ['powerlifting', 'culturismo'],
-        equipment: ['barra', 'banco'],
-        difficulty: 2,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'dead_1',
-        name: 'Peso muerto',
-        nameEn: 'Deadlift',
-        description: 'Peso muerto convencional con barra.',
-        primaryMuscle: 'isquiotibiales',
-        secondaryMuscles: ['glúteos', 'erectores', 'trapecio', 'dorsales'],
-        category: ExerciseCategory.deadlift,
-        disciplines: ['powerlifting', 'strongman'],
-        equipment: ['barra'],
-        difficulty: 3,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'dead_2',
-        name: 'Peso muerto rumano',
-        nameEn: 'Romanian Deadlift',
-        description: 'Peso muerto rumano para isquiotibiales.',
-        primaryMuscle: 'isquiotibiales',
-        secondaryMuscles: ['glúteos', 'erectores'],
-        category: ExerciseCategory.deadlift,
-        disciplines: ['culturismo', 'funcional'],
-        equipment: ['barra'],
-        difficulty: 2,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'row_1',
-        name: 'Dominadas',
-        nameEn: 'Pull-ups',
-        description: 'Dominadas en barra con agarre prono.',
-        primaryMuscle: 'dorsales',
-        secondaryMuscles: ['bíceps', 'romboides', 'trapecio_inferior'],
-        category: ExerciseCategory.row,
-        disciplines: ['calistenia', 'funcional'],
-        equipment: ['peso corporal'],
-        difficulty: 2,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'ohp_1',
-        name: 'Press militar con barra',
-        nameEn: 'Overhead Press',
-        description: 'Press de hombro con barra de pie.',
-        primaryMuscle: 'deltoides',
-        secondaryMuscles: ['tríceps', 'deltoides_anterior', 'trapecio'],
-        category: ExerciseCategory.overhead,
-        disciplines: ['powerlifting', 'culturismo'],
-        equipment: ['barra'],
-        difficulty: 3,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'row_2',
-        name: 'Remo con barra',
-        nameEn: 'Barbell Row',
-        description: 'Remo inclinado con barra prono o supino.',
-        primaryMuscle: 'dorsales',
-        secondaryMuscles: ['romboides', 'trapecio', 'bíceps', 'erectores'],
-        category: ExerciseCategory.row,
-        disciplines: ['powerlifting', 'culturismo'],
-        equipment: ['barra'],
-        difficulty: 2,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'acc_1',
-        name: 'Curl de bíceps',
-        nameEn: 'Bicep Curl',
-        description: 'Curl de bíceps con mancuernas o barra.',
-        primaryMuscle: 'bíceps',
-        secondaryMuscles: ['braquial', 'braquiorradial'],
-        category: ExerciseCategory.accessory,
-        disciplines: ['culturismo'],
-        equipment: ['mancuernas', 'barra EZ'],
-        difficulty: 1,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'acc_2',
-        name: 'Plancha',
-        nameEn: 'Plank',
-        description: 'Plancha isométrica para el core.',
-        primaryMuscle: 'core',
-        secondaryMuscles: ['recto_abdominal', 'oblicuos'],
-        category: ExerciseCategory.accessory,
-        disciplines: ['funcional', 'calistenia'],
-        equipment: ['peso corporal'],
-        difficulty: 1,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-      const ExerciseDef(
-        id: 'acc_3',
-        name: 'Hip thrust',
-        nameEn: 'Hip Thrust',
-        description: 'Hip thrust con barra para glúteos.',
-        primaryMuscle: 'glúteos',
-        secondaryMuscles: ['isquiotibiales', 'core'],
-        category: ExerciseCategory.accessory,
-        disciplines: ['culturismo', 'funcional'],
-        equipment: ['barra', 'banco'],
-        difficulty: 2,
-        timestamp: '2024-01-01T00:00:00.000Z',
-      ),
-    ];
-  }
-
   // ── Helpers ────────────────────────────────────────────────────────────────
 
   Color _categoryColor(ExerciseCategory cat) {
@@ -192,49 +57,24 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
     }
   }
 
-  List<ExerciseDef> get _filteredExercises {
-    // TODO: replace with ExerciseService call when available
-    var list = _stubExercises();
-
-    if (_query.isNotEmpty) {
-      final q = _query.toLowerCase();
-      list = list
-          .where((e) =>
-              e.name.toLowerCase().contains(q) ||
-              e.primaryMuscle.toLowerCase().contains(q))
-          .toList();
-    }
-
-    if (_selectedCategory != null) {
-      list = list.where((e) => e.category == _selectedCategory).toList();
-    }
-
-    if (_selectedMuscle != null) {
-      list =
-          list.where((e) => e.allMuscles.contains(_selectedMuscle)).toList();
-    }
-
-    if (_selectedEquipment != null) {
-      list =
-          list.where((e) => e.equipment.contains(_selectedEquipment)).toList();
-    }
-
-    if (_selectedDifficulty != null) {
-      list =
-          list.where((e) => e.difficulty == _selectedDifficulty).toList();
-    }
-
-    // _favoritesOnly and _showHidden depend on ExercisePref from service;
-    // kept as UI toggles for now.
+  List<ExerciseDef> _getFilteredExercises(ExerciseService svc) {
+    var list = svc.search(
+      _query,
+      category: _selectedCategory,
+      primaryMuscle: _selectedMuscle,
+      equipment: _selectedEquipment,
+      difficulty: _selectedDifficulty,
+      favoritesOnly: _favoritesOnly,
+      showHidden: _showHidden,
+    );
 
     switch (_sortOrder) {
-      case 'az':
-        list.sort((a, b) => a.name.compareTo(b.name));
-        break;
       case 'difficulty':
-        list.sort((a, b) => a.difficulty.compareTo(b.difficulty));
+        list = [...list]..sort((a, b) => a.difficulty.compareTo(b.difficulty));
         break;
-      // 'recent' requires service data; no-op for now
+      case 'az':
+      default:
+        list = [...list]..sort((a, b) => a.name.compareTo(b.name));
     }
 
     return list;
@@ -371,7 +211,16 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final exercises = _filteredExercises;
+    final svc = context.watch<ExerciseService>();
+    if (svc.isLoading) {
+      return const Scaffold(
+        backgroundColor: Color(0xFF0D0D0D),
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xFFE53935)),
+        ),
+      );
+    }
+    final exercises = _getFilteredExercises(svc);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D0D),
@@ -751,17 +600,12 @@ class _ExerciseListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Stub favorite state — replace with ExercisePref lookup via service
-
     return GestureDetector(
       onTap: () {
-        // TODO: navigate to ExerciseDetailScreen(exerciseDef: exercise)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Detalle de: ${exercise.name}'),
-            backgroundColor: const Color(0xFF1A1A1A),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 1),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ExerciseDetailScreen(exerciseDef: exercise),
           ),
         );
       },
@@ -875,13 +719,10 @@ class _ExerciseGridCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: navigate to ExerciseDetailScreen(exerciseDef: exercise)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Detalle de: ${exercise.name}'),
-            backgroundColor: const Color(0xFF1A1A1A),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 1),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ExerciseDetailScreen(exerciseDef: exercise),
           ),
         );
       },
