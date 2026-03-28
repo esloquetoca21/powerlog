@@ -169,7 +169,20 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
           DateTime.now().toIso8601String(),
     );
 
-    await context.read<ExerciseService>().saveCustomExercise(def, uid);
+    try {
+      await context.read<ExerciseService>().saveCustomExercise(def, uid);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al guardar: $e'),
+          backgroundColor: const Color(0xFF1A1A1A),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
 
     if (!mounted) return;
     setState(() => _saving = false);
@@ -274,7 +287,7 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
                 hint: 'Selecciona el músculo principal',
                 error: _primaryMuscleError,
                 items: kAllMuscles.map((m) {
-                  return DropdownMenuItem(value: m, child: Text(m));
+                  return DropdownMenuItem(value: m, child: Text(formatMuscleName(m)));
                 }).toList(),
                 onChanged: (v) => setState(() {
                   _primaryMuscle = v;
@@ -304,7 +317,7 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
                     .map((m) {
                   final selected = _secondaryMuscles.contains(m);
                   return _MultiChip(
-                    label: m,
+                    label: formatMuscleName(m),
                     selected: selected,
                     onTap: () => setState(() {
                       if (selected) {
@@ -354,7 +367,7 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
                 children: kAllDisciplines.map((d) {
                   final selected = _disciplines.contains(d);
                   return _MultiChip(
-                    label: d,
+                    label: formatMuscleName(d),
                     selected: selected,
                     onTap: () => setState(() {
                       if (selected) {
@@ -378,7 +391,7 @@ class _CreateExerciseScreenState extends State<CreateExerciseScreen> {
                 children: kAllEquipment.map((e) {
                   final selected = _equipment.contains(e);
                   return _MultiChip(
-                    label: e,
+                    label: formatMuscleName(e),
                     selected: selected,
                     onTap: () => setState(() {
                       if (selected) {
