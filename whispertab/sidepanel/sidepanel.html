@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhisperTab</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <h1 class="header__title">🎙️ WhisperTab</h1>
+    <p class="header__subtitle">Transcribe y resume cualquier audio</p>
+  </header>
+
+  <!-- ===== SELECTOR DE MODO ===== -->
+  <section class="mode-selector">
+    <button id="btn-realtime" class="mode-btn" title="Usa Web Speech API del navegador (rápido, necesita micrófono)">
+      ⚡ Tiempo Real
+    </button>
+    <button id="btn-deferred" class="mode-btn" title="Graba audio y envía a Groq Whisper (más preciso)">
+      🎯 Diferido
+    </button>
+  </section>
+
+  <!-- ===== ESTADO ===== -->
+  <section class="status-section">
+    <span id="status-badge" class="badge badge--idle">Listo</span>
+    <span id="status-detail" class="status-detail"></span>
+  </section>
+
+  <!-- ===== TRANSCRIPCIÓN ===== -->
+  <section class="transcript-section">
+    <label for="transcript-area" class="section-label">Transcripción</label>
+    <textarea
+      id="transcript-area"
+      class="transcript-area"
+      placeholder="Aquí aparecerá la transcripción del audio..."
+      readonly
+    ></textarea>
+  </section>
+
+  <!-- ===== BOTONES DE ACCIÓN ===== -->
+  <section class="actions">
+    <button id="btn-stop" class="action-btn action-btn--stop" disabled>
+      ⏹️ Detener
+    </button>
+    <button id="btn-summarize" class="action-btn action-btn--summarize" disabled>
+      🤖 Resumir con Claude
+    </button>
+    <button id="btn-copy" class="action-btn action-btn--copy" disabled>
+      📋 Copiar texto
+    </button>
+    <button id="btn-clear" class="action-btn action-btn--clear">
+      🗑️ Limpiar
+    </button>
+  </section>
+
+  <!-- ===== RESUMEN ===== -->
+  <section id="summary-section" class="summary-section" style="display: none;">
+    <label class="section-label">Resumen (Claude AI)</label>
+    <div id="summary-content" class="summary-content"></div>
+  </section>
+
+  <!-- ===== ERROR / AVISOS ===== -->
+  <div id="error-banner" class="error-banner" style="display: none;"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <a href="#" id="open-options">⚙️ Configuración</a>
+  </footer>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

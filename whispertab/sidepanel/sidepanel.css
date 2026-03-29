@@ -1,0 +1,284 @@
+/* ============================================================
+   WhisperTab - Estilos del Side Panel
+   ============================================================
+   Diseño limpio, moderno y fácil de leer.
+   Usa variables CSS para que sea fácil cambiar colores.
+   ============================================================ */
+
+/* --- Variables de color --- */
+:root {
+  --color-bg: #1a1a2e;
+  --color-surface: #16213e;
+  --color-surface-hover: #1a2745;
+  --color-primary: #0f3460;
+  --color-accent: #e94560;
+  --color-accent-hover: #c73a52;
+  --color-text: #eee;
+  --color-text-muted: #8892b0;
+  --color-success: #64ffda;
+  --color-warning: #ffd93d;
+  --color-error: #ff6b6b;
+  --color-border: #233554;
+  --radius: 8px;
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* --- Reset básico --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: 16px;
+  min-width: 320px;
+  line-height: 1.5;
+}
+
+/* --- Header --- */
+.header {
+  text-align: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.header__subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* --- Selector de modo --- */
+.mode-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent);
+}
+
+.mode-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-accent);
+  color: white;
+}
+
+/* --- Estado --- */
+.status-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge--idle {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.badge--recording {
+  background: var(--color-accent);
+  color: white;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.badge--transcribing {
+  background: var(--color-warning);
+  color: #333;
+}
+
+.badge--stopped {
+  background: var(--color-success);
+  color: #333;
+}
+
+.badge--error {
+  background: var(--color-error);
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.status-detail {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* --- Transcripción --- */
+.section-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.transcript-section {
+  margin-bottom: 12px;
+}
+
+.transcript-area {
+  width: 100%;
+  height: 200px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+
+.transcript-area:focus {
+  border-color: var(--color-accent);
+}
+
+/* --- Botones de acción --- */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-btn--stop {
+  background: var(--color-accent);
+  color: white;
+}
+
+.action-btn--stop:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.action-btn--summarize {
+  background: #6c63ff;
+  color: white;
+}
+
+.action-btn--summarize:hover:not(:disabled) {
+  background: #5a52d5;
+}
+
+.action-btn--copy {
+  background: var(--color-primary);
+  color: white;
+}
+
+.action-btn--copy:hover:not(:disabled) {
+  background: #0d2b4d;
+}
+
+.action-btn--clear {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.action-btn--clear:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+/* --- Resumen --- */
+.summary-section {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.summary-content {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--color-text);
+}
+
+/* --- Error banner --- */
+.error-banner {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  font-size: 0.8rem;
+  margin-bottom: 12px;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.footer a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.footer a:hover {
+  color: var(--color-accent);
+}

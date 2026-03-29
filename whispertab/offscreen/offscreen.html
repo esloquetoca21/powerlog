@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhisperTab Offscreen</title>
+</head>
+<body>
+  <!--
+    Este archivo NO se ve nunca. Es un documento "invisible" que Chrome
+    necesita para poder usar MediaRecorder (grabar audio) porque el
+    service worker de Manifest V3 no puede hacerlo directamente.
+  -->
+  <script src="offscreen.js"></script>
+</body>
+</html>

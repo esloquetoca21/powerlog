@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "WhisperTab",
+  "version": "1.0.0",
+  "description": "Captura audio de cualquier pestaña, transcribe con Groq Whisper y genera resúmenes con Claude.",
+  "permissions": [
+    "tabCapture",
+    "sidePanel",
+    "storage",
+    "scripting",
+    "activeTab",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "action": {
+    "default_title": "WhisperTab - Abrir panel"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
